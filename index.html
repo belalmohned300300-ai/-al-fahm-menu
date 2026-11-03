@@ -41,7 +41,7 @@
   <!-- Header -->
   <header class="sticky top-0 z-30 bg-black/90 backdrop-blur-md border-b border-neutral-800 px-4 py-3">
     <div class="max-w-md mx-auto flex items-center justify-between">
-      <div class="flex items-center gap-2 cursor-pointer" onclick="handleSecretClick()">
+      <div class="flex items-center gap-2">
         <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-red-600 to-amber-500 flex items-center justify-center font-black text-xl shadow-lg shadow-red-900/40">
           🔥
         </div>
@@ -50,11 +50,6 @@
           <span class="text-xs text-amber-500 font-bold">للمشويات والطواجن</span>
         </div>
       </div>
-      
-      <!-- Owner Dashboard Trigger -->
-      <button onclick="openAdminModal()" class="w-9 h-9 rounded-full bg-neutral-900 border border-neutral-700 flex items-center justify-center text-gray-400 hover:text-amber-500 transition">
-        <i class="fa-solid fa-gear text-sm"></i>
-      </button>
     </div>
   </header>
 
@@ -159,76 +154,7 @@
     </div>
   </div>
 
-  <!-- Admin Password Modal -->
-  <div id="adminAuthModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-neutral-900 border border-neutral-800 w-full max-w-xs rounded-2xl p-5 text-center">
-      <i class="fa-solid fa-lock text-3xl text-amber-500 mb-2"></i>
-      <h3 class="font-bold text-white mb-1">لوحة تحكم الإدارة</h3>
-      <p class="text-xs text-neutral-400 mb-4">أدخل كلمة السر للدخول</p>
-      <input type="password" id="adminPassInput" placeholder="كلمة السر" class="w-full bg-black border border-neutral-800 rounded-xl px-3 py-2 text-center text-sm text-white mb-3 focus:outline-none focus:border-amber-500">
-      <div class="flex gap-2">
-        <button onclick="checkAdminPassword()" class="flex-1 bg-amber-600 text-white font-bold py-2 rounded-xl text-sm">دخول</button>
-        <button onclick="closeAdminAuthModal()" class="flex-1 bg-neutral-800 text-gray-300 font-bold py-2 rounded-xl text-sm">إلغاء</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Admin Panel Modal -->
-  <div id="adminPanelModal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-md hidden flex flex-col">
-    <!-- Admin Header -->
-    <div class="bg-neutral-900 border-b border-neutral-800 p-4 flex justify-between items-center">
-      <div class="flex items-center gap-2">
-        <i class="fa-solid fa-sliders text-amber-500"></i>
-        <h2 class="font-bold text-white">لوحة تحكم المنيو</h2>
-      </div>
-      <button onclick="closeAdminPanelModal()" class="text-neutral-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-
-    <!-- Admin Content Tabs -->
-    <div class="p-4 flex-1 overflow-y-auto max-w-md mx-auto w-full space-y-6">
-      
-      <!-- Add New Item Section -->
-      <div class="bg-neutral-900 border border-neutral-800 p-4 rounded-xl space-y-3">
-        <h4 class="font-bold text-sm text-amber-500 flex items-center gap-2">
-          <i class="fa-solid fa-plus"></i> إضافة صنف جديد للمنيو
-        </h4>
-        <input type="text" id="newItemName" placeholder="اسم الصنف" class="w-full bg-black border border-neutral-800 rounded-xl px-3 py-2 text-sm text-white">
-        <div class="flex gap-2">
-          <input type="number" id="newItemPrice" placeholder="السعر (ج.م)" class="w-1/2 bg-black border border-neutral-800 rounded-xl px-3 py-2 text-sm text-white">
-          <select id="newItemCat" class="w-1/2 bg-black border border-neutral-800 rounded-xl px-3 py-2 text-sm text-white">
-            <!-- Dynamic Category Options -->
-          </select>
-        </div>
-        <button onclick="addNewMenuItem()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-xl text-sm">إضافة الصنف</button>
-      </div>
-
-      <!-- Add New Promo Code -->
-      <div class="bg-neutral-900 border border-neutral-800 p-4 rounded-xl space-y-3">
-        <h4 class="font-bold text-sm text-amber-500 flex items-center gap-2">
-          <i class="fa-solid fa-ticket"></i> إضافة كود خصم جديد
-        </h4>
-        <div class="flex gap-2">
-          <input type="text" id="newPromoCode" placeholder="الكود (مثال: SALE10)" class="uppercase w-1/2 bg-black border border-neutral-800 rounded-xl px-3 py-2 text-sm text-white">
-          <input type="number" id="newPromoPercent" placeholder="نسبة الخصم %" class="w-1/2 bg-black border border-neutral-800 rounded-xl px-3 py-2 text-sm text-white">
-        </div>
-        <button onclick="addNewPromoCode()" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-2 rounded-xl text-sm">تفعيل الكود</button>
-      </div>
-
-      <!-- Edit Items List -->
-      <div class="bg-neutral-900 border border-neutral-800 p-4 rounded-xl space-y-3">
-        <h4 class="font-bold text-sm text-amber-500 flex items-center gap-2">
-          <i class="fa-solid fa-list-check"></i> تعديل الأصناف والأسعار والإخفاء
-        </h4>
-        <div id="adminItemsList" class="space-y-2 max-h-80 overflow-y-auto pr-1">
-          <!-- Dynamic Admin Items -->
-        </div>
-      </div>
-
-    </div>
-  </div>
-
   <script>
-    // Initial Menu Data
     const defaultCategories = ["الطواجن الرئيسية", "المكرونات", "طواجن موتزريلا", "الفته", "الوجبات", "وجبات الميكس", "المحشي", "المشويات الرئيسية", "حواوشي كبير ع الفحم"];
     
     const defaultMenu = [
@@ -306,22 +232,16 @@
     ];
 
     let menuItems = JSON.parse(localStorage.getItem('alfahm_menu')) || defaultMenu;
-    let promoCodes = JSON.parse(localStorage.getItem('alfahm_promos')) || { 'OFF10': 10, 'WELCOME': 15 };
-    let adminPass = localStorage.getItem('alfahm_pass') || '1234';
-
+    let promoCodes = JSON.parse(localStorage.getItem('alfahm_promos')) || { 'OFF10': 10 };
     let cart = {};
     let activeCategory = defaultCategories[0];
     let appliedDiscount = 0;
-    let secretClicks = 0;
 
-    // Initialize App
     function initApp() {
       renderCategories();
       renderMenuItems();
-      renderAdminCategoryOptions();
     }
 
-    // Render Categories
     function renderCategories() {
       const tabs = document.getElementById('categoryTabs');
       tabs.innerHTML = defaultCategories.map(cat => `
@@ -337,7 +257,6 @@
       renderMenuItems();
     }
 
-    // Render Menu Items
     function renderMenuItems() {
       const container = document.getElementById('menuContainer');
       const searchVal = document.getElementById('searchInput').value.trim().toLowerCase();
@@ -385,21 +304,17 @@
       renderMenuItems();
     }
 
-    // Cart Operations
     function updateQty(id, change) {
       if (!cart[id]) cart[id] = 0;
       cart[id] += change;
       if (cart[id] <= 0) delete cart[id];
-
       renderMenuItems();
       updateCartBar();
     }
 
     function updateCartBar() {
       const cartBar = document.getElementById('cartBar');
-      let total = 0;
-      let count = 0;
-
+      let total = 0, count = 0;
       for (let id in cart) {
         let item = menuItems.find(i => i.id == id);
         if (item) {
@@ -407,21 +322,14 @@
           count += cart[id];
         }
       }
-
       document.getElementById('cartTotal').innerText = total;
-
-      if (count > 0) {
-        cartBar.classList.remove('translate-y-full');
-      } else {
-        cartBar.classList.add('translate-y-full');
-      }
+      if (count > 0) cartBar.classList.remove('translate-y-full');
+      else cartBar.classList.add('translate-y-full');
     }
 
-    // Checkout Modal
     function openCheckoutModal() {
       const summary = document.getElementById('orderSummary');
       let subtotal = 0;
-
       summary.innerHTML = Object.keys(cart).map(id => {
         let item = menuItems.find(i => i.id == id);
         let itemTotal = item.price * cart[id];
@@ -440,7 +348,6 @@
       document.getElementById('finalTotal').innerText = subtotal;
       document.getElementById('promoMessage').innerText = '';
       document.getElementById('promoCodeInput').value = '';
-
       document.getElementById('checkoutModal').classList.remove('hidden');
     }
 
@@ -448,7 +355,6 @@
       document.getElementById('checkoutModal').classList.add('hidden');
     }
 
-    // Apply Promo Code
     function applyPromoCode() {
       const code = document.getElementById('promoCodeInput').value.trim().toUpperCase();
       const msg = document.getElementById('promoMessage');
@@ -458,10 +364,8 @@
         let percent = promoCodes[code];
         appliedDiscount = (subtotal * percent) / 100;
         let final = subtotal - appliedDiscount;
-
         document.getElementById('discountAmount').innerText = appliedDiscount.toFixed(1);
         document.getElementById('finalTotal').innerText = final.toFixed(1);
-
         msg.className = "text-xs mt-1 font-bold text-emerald-400";
         msg.innerText = `تم تطبيق خصم ${percent}% بنجاح!`;
       } else {
@@ -470,15 +374,12 @@
       }
     }
 
-    // Send to WhatsApp
     function sendOrderToWhatsApp(e) {
       e.preventDefault();
-
       const name = document.getElementById('custName').value.trim();
       const phone = document.getElementById('custPhone').value.trim();
       const address = document.getElementById('custAddress').value.trim();
       const notes = document.getElementById('custNotes').value.trim();
-
       let subtotal = parseFloat(document.getElementById('subTotal').innerText);
       let finalTotal = parseFloat(document.getElementById('finalTotal').innerText);
 
@@ -495,130 +396,12 @@
       }
 
       msg += `\n*المجموع الفرعي:* ${subtotal} ج.م`;
-      if (appliedDiscount > 0) {
-        msg += `\n*الخصم:* -${appliedDiscount.toFixed(1)} ج.م`;
-      }
+      if (appliedDiscount > 0) msg += `\n*الخصم:* -${appliedDiscount.toFixed(1)} ج.م`;
       msg += `\n*الإجمالي النهائي:* ${finalTotal.toFixed(1)} ج.م\n`;
 
-      const whatsappNum = "201121126633";
-      const url = `https://wa.me/${whatsappNum}?text=${encodeURIComponent(msg)}`;
-      window.open(url, '_blank');
+      window.open(`https://wa.me/201121126633?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
-    // Admin Control Panel Logic
-    function handleSecretClick() {
-      secretClicks++;
-      if (secretClicks >= 5) {
-        secretClicks = 0;
-        openAdminModal();
-      }
-    }
-
-    function openAdminModal() {
-      document.getElementById('adminAuthModal').classList.remove('hidden');
-    }
-
-    function closeAdminAuthModal() {
-      document.getElementById('adminAuthModal').classList.add('hidden');
-    }
-
-    function checkAdminPassword() {
-      const input = document.getElementById('adminPassInput').value;
-      if (input === adminPass) {
-        closeAdminAuthModal();
-        openAdminPanel();
-      } else {
-        alert('كلمة السر غير صحيحة!');
-      }
-    }
-
-    function openAdminPanel() {
-      renderAdminItems();
-      document.getElementById('adminPanelModal').classList.remove('hidden');
-    }
-
-    function closeAdminPanelModal() {
-      document.getElementById('adminPanelModal').classList.add('hidden');
-    }
-
-    function renderAdminCategoryOptions() {
-      const sel = document.getElementById('newItemCat');
-      sel.innerHTML = defaultCategories.map(c => `<option value="${c}">${c}</option>`).join('');
-    }
-
-    function renderAdminItems() {
-      const list = document.getElementById('adminItemsList');
-      list.innerHTML = menuItems.map(item => `
-        <div class="flex items-center justify-between bg-black p-2 rounded-lg border border-neutral-800 text-xs gap-2">
-          <span class="text-white font-bold flex-1 truncate">${item.name}</span>
-          <input type="number" value="${item.price}" onchange="updateItemPrice(${item.id}, this.value)" class="w-16 bg-neutral-900 border border-neutral-700 rounded px-1.5 py-1 text-center text-amber-500 font-bold">
-          <button onclick="toggleItemStock(${item.id})" class="px-2 py-1 rounded font-bold ${item.available ? 'bg-emerald-900 text-emerald-400 border border-emerald-700' : 'bg-red-900 text-red-400 border border-red-700'}">
-            ${item.available ? 'متاح' : 'مغلق'}
-          </button>
-        </div>
-      `).join('');
-    }
-
-    function updateItemPrice(id, newPrice) {
-      let item = menuItems.find(i => i.id == id);
-      if (item) {
-        item.price = parseFloat(newPrice) || item.price;
-        saveAndSync();
-      }
-    }
-
-    function toggleItemStock(id) {
-      let item = menuItems.find(i => i.id == id);
-      if (item) {
-        item.available = !item.available;
-        saveAndSync();
-        renderAdminItems();
-      }
-    }
-
-    function addNewMenuItem() {
-      const name = document.getElementById('newItemName').value.trim();
-      const price = parseFloat(document.getElementById('newItemPrice').value);
-      const cat = document.getElementById('newItemCat').value;
-
-      if (name && price) {
-        const newItem = {
-          id: Date.now(),
-          name: name,
-          price: price,
-          cat: cat,
-          available: true
-        };
-        menuItems.push(newItem);
-        saveAndSync();
-        renderAdminItems();
-        document.getElementById('newItemName').value = '';
-        document.getElementById('newItemPrice').value = '';
-        alert('تمت إضافة الصنف بنجاح!');
-      } else {
-        alert('برجاء كتابة الاسم والسعر!');
-      }
-    }
-
-    function addNewPromoCode() {
-      const code = document.getElementById('newPromoCode').value.trim().toUpperCase();
-      const percent = parseFloat(document.getElementById('newPromoPercent').value);
-
-      if (code && percent) {
-        promoCodes[code] = percent;
-        localStorage.setItem('alfahm_promos', JSON.stringify(promoCodes));
-        document.getElementById('newPromoCode').value = '';
-        document.getElementById('newPromoPercent').value = '';
-        alert(`تم تفعيل كود الخصم ${code} بنسبة ${percent}% بنجاح!`);
-      }
-    }
-
-    function saveAndSync() {
-      localStorage.setItem('alfahm_menu', JSON.stringify(menuItems));
-      renderMenuItems();
-    }
-
-    // Run
     initApp();
   </script>
 </body>
