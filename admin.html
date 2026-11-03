@@ -81,9 +81,9 @@
       <!-- Sync / Backup Section for Mobile & PC -->
       <div class="bg-neutral-900 border border-neutral-800 p-4 rounded-2xl space-y-3">
         <h3 class="font-bold text-sm text-amber-500 flex items-center gap-2">
-          <i class="fa-solid fa-sync"></i> مزامنة البيانات بين الكمبيوتر والموبايل
+          <i class="fa-solid fa-sync"></i> مزامنة البيانات والأوردرات بين الكمبيوتر والموبايل
         </h3>
-        <p class="text-xs text-neutral-400">لكي تظهر نفس الأصناف والمخزن على هاتفك المحمول، اضغط على (نسخ بيانات الكمبيوتر)، ثم افتح صفحة الأدمن من الموبايل والصقها واضغط (استيراد).</p>
+        <p class="text-xs text-neutral-400">لنقل الأوردرات والأصناف إلى هاتفك: اضغط (نسخ بيانات الكمبيوتر)، ثم افتح صفحة الأدمن من الموبايل والصقها واضغط (استيراد).</p>
         <div class="flex flex-col md:flex-row gap-2">
           <button onclick="exportData()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-xl text-xs transition">1- نسخ بيانات الكمبيوتر للحافظة</button>
           <button onclick="importData()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 px-4 rounded-xl text-xs transition">2- استيراد البيانات (على الموبايل)</button>
@@ -95,9 +95,9 @@
         <div class="flex items-center justify-between border-b border-neutral-800 pb-3">
           <div>
             <h2 class="font-bold text-base text-white flex items-center gap-2">
-              <i class="fa-solid fa-list-check text-amber-500"></i> سجل الطلبات الواردة
+              <i class="fa-solid fa-list-check text-amber-500"></i> سجل الطلبات الواردة (مع التاريخ والوقت)
             </h2>
-            <p class="text-xs text-neutral-400 mt-0.5">الأوردرات محفوظة بشكل دائم</p>
+            <p class="text-xs text-neutral-400 mt-0.5">تتبع تاريخ ووقت كل أوردر بدقة</p>
           </div>
           <button onclick="clearAllOrders()" class="text-xs bg-red-950 text-red-400 border border-red-800 px-3 py-1.5 rounded-xl font-bold hover:bg-red-900">مسح السجل يدوياً</button>
         </div>
@@ -176,7 +176,6 @@
   <script>
     const defaultCategories = ["الطواجن الرئيسية", "المكرونات", "طواجن موتزريلا", "الفته", "الوجبات", "وجبات الميكس", "المحشي", "المشويات الرئيسية", "حواوشي كبير ع الفحم"];
     
-    // Fallback default menu in case storage is empty
     const defaultMenu = [
       { id: 1, name: "طاجن كوارع ورق عنب", price: 300, stock: 50, soldOrders: 0, cat: "الطواجن الرئيسية", available: true },
       { id: 2, name: "طاجن كوارع", price: 250, stock: 50, soldOrders: 0, cat: "الطواجن الرئيسية", available: true },
@@ -216,7 +215,7 @@
       { id: 36, name: "وجبة ارز بالكبده وقوانص", price: 140, stock: 50, soldOrders: 0, cat: "الوجبات", available: true },
       { id: 37, name: "وجبة نص فرخه مع كفته", price: 320, stock: 50, soldOrders: 0, cat: "وجبات الميكس", available: true },
       { id: 38, name: "وجبة ربع فرخه مع كفته", price: 250, stock: 50, soldOrders: 0, cat: "وجبات الميكس", available: true },
-      { id: 39, name: "وجبة شيش طاوق مع كفته", price: 250, stock: 50, soldOrders: 0, cat: "الوجبات", available: true },
+      { id: 39, name: "وجبة شيش طاوق مع كفته", price: 250, stock: 50, soldOrders: 0, cat: "وجبات الميكس", available: true },
       { id: 40, name: "وجبة ورق عنب مع بانيه", price: 280, stock: 50, soldOrders: 0, cat: "المحشي", available: true },
       { id: 41, name: "وجبة كرنب مع بانيه", price: 250, stock: 50, soldOrders: 0, cat: "المحشي", available: true },
       { id: 42, name: "ورق عنب مع شيش طاوق", price: 270, stock: 50, soldOrders: 0, cat: "المحشي", available: true },
@@ -315,7 +314,7 @@
             <div>
               <div class="font-extrabold text-white text-sm flex items-center gap-2">
                 👤 ${order.name}
-                <span class="text-[10px] bg-neutral-900 text-amber-500 px-2 py-0.5 rounded border border-neutral-800 font-normal">${order.date || ''}</span>
+                <span class="text-[10px] bg-neutral-900 text-amber-500 px-2 py-0.5 rounded border border-neutral-800 font-normal">📅 ${order.date || 'اليوم'}</span>
               </div>
               <div class="text-neutral-400 font-bold mt-0.5">📱 ${order.phone}</div>
             </div>
@@ -363,6 +362,7 @@
           <div><strong class="text-neutral-400">الهاتف:</strong> ${order.phone}</div>
           <div><strong class="text-neutral-400">العنوان:</strong> ${order.address}</div>
           <div><strong class="text-neutral-400">طريقة الدفع:</strong> ${order.paymentMethod || 'كاش'}</div>
+          <div><strong class="text-neutral-400">وقت الطلب:</strong> ${order.date || 'اليوم'}</div>
           ${order.notes ? `<div><strong class="text-neutral-400">ملاحظات:</strong> ${order.notes}</div>` : ''}
         </div>
         <div class="font-bold text-white text-xs pt-1">الأصناف المطلوبة:</div>
@@ -405,7 +405,6 @@
       const container = document.getElementById('adminItemsList');
       const search = document.getElementById('searchAdminItem').value.trim().toLowerCase();
 
-      // If storage menu is empty, fallback to defaultMenu so items always show up!
       if (!menuItems || menuItems.length === 0) {
         menuItems = defaultMenu;
       }
@@ -518,7 +517,6 @@
       localStorage.setItem('alfahm_menu', JSON.stringify(menuItems));
     }
 
-    // Export and Import for Mobile Sync
     function exportData() {
       const data = {
         menu: menuItems,
@@ -528,33 +526,24 @@
       };
       const jsonStr = JSON.stringify(data);
       navigator.clipboard.writeText(jsonStr).then(() => {
-        alert('تم نسخ بيانات المخزن والأصناف بنجاح! الآن افتح صفحة الأدمن من الموبايل واضغط (استيراد البيانات).');
+        alert('تم نسخ جميع البيانات والأوردرات بنجاح! افتح لوحة التحكم من الموبايل واضغط (استيراد البيانات).');
       }).catch(err => {
-        prompt('انسخ هذا الكود يدوياً إلى هاتفك:', jsonStr);
+        prompt('انسخ هذا الكود يدوياً:', jsonStr);
       });
     }
 
     function importData() {
-      const jsonStr = prompt('قم بصق بيانات النسخ الاحتياطي (الكود الذي نسخته من الكمبيوتر) هنا:');
+      const jsonStr = prompt('الصق كود النسخ الاحتياطي هنا:');
       if (jsonStr) {
         try {
           const data = JSON.parse(jsonStr);
-          if (data.menu) {
-            localStorage.setItem('alfahm_menu', JSON.stringify(data.menu));
-            menuItems = data.menu;
-          }
-          if (data.cats) {
-            localStorage.setItem('alfahm_cats', JSON.stringify(data.cats));
-            categories = data.cats;
-          }
-          if (data.orders) {
-            localStorage.setItem('alfahm_orders_list', JSON.stringify(data.orders));
-            ordersList = data.orders;
-          }
-          alert('تم استيراد البيانات والمخزن بنجاح على الموبايل!');
+          if (data.menu) { localStorage.setItem('alfahm_menu', JSON.stringify(data.menu)); menuItems = data.menu; }
+          if (data.cats) { localStorage.setItem('alfahm_cats', JSON.stringify(data.cats)); categories = data.cats; }
+          if (data.orders) { localStorage.setItem('alfahm_orders_list', JSON.stringify(data.orders)); ordersList = data.orders; }
+          alert('تم استيراد كافة الأصناف والأوردرات بنجاح على الموبايل!');
           location.reload();
         } catch (e) {
-          alert('الكود غير صحيح، تأكد من نسخه كاملاً.');
+          alert('الكود غير صحيح.');
         }
       }
     }
