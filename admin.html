@@ -78,18 +78,6 @@
         </div>
       </div>
 
-      <!-- Sync / Backup Section for Mobile & PC -->
-      <div class="bg-neutral-900 border border-neutral-800 p-4 rounded-2xl space-y-3">
-        <h3 class="font-bold text-sm text-amber-500 flex items-center gap-2">
-          <i class="fa-solid fa-sync"></i> مزامنة البيانات والأوردرات بين الكمبيوتر والموبايل
-        </h3>
-        <p class="text-xs text-neutral-400">لنقل الأوردرات والأصناف إلى هاتفك: اضغط (نسخ بيانات الكمبيوتر)، ثم افتح صفحة الأدمن من الموبايل والصقها واضغط (استيراد).</p>
-        <div class="flex flex-col md:flex-row gap-2">
-          <button onclick="exportData()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-xl text-xs transition">1- نسخ بيانات الكمبيوتر للحافظة</button>
-          <button onclick="importData()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 px-4 rounded-xl text-xs transition">2- استيراد البيانات (على الموبايل)</button>
-        </div>
-      </div>
-
       <!-- Orders Management Section -->
       <div class="bg-neutral-900 border border-neutral-800 rounded-2xl p-5 space-y-4">
         <div class="flex items-center justify-between border-b border-neutral-800 pb-3">
@@ -249,6 +237,17 @@
     let isStoreOpen = JSON.parse(localStorage.getItem('alfahm_open')) ?? true;
     let storeMsg = localStorage.getItem('alfahm_msg') || 'المطعم مغلق حالياً';
     let ordersList = JSON.parse(localStorage.getItem('alfahm_orders_list')) || [];
+
+    // --- AUTOMATIC CLOUD/LOCAL SYNC ACROSS DEVICES ---
+    window.addEventListener('storage', function(e) {
+      if (e.key === 'alfahm_orders_list' || e.key === 'alfahm_menu') {
+        ordersList = JSON.parse(localStorage.getItem('alfahm_orders_list')) || [];
+        menuItems = JSON.parse(localStorage.getItem('alfahm_menu')) || defaultMenu;
+        renderStats();
+        renderOrdersList();
+        renderAdminItems();
+      }
+    });
 
     function login() {
       const input = document.getElementById('passInput').value;
@@ -515,37 +514,6 @@
 
     function saveData() {
       localStorage.setItem('alfahm_menu', JSON.stringify(menuItems));
-    }
-
-    function exportData() {
-      const data = {
-        menu: menuItems,
-        cats: categories,
-        promos: promoCodes,
-        orders: ordersList
-      };
-      const jsonStr = JSON.stringify(data);
-      navigator.clipboard.writeText(jsonStr).then(() => {
-        alert('تم نسخ جميع البيانات والأوردرات بنجاح! افتح لوحة التحكم من الموبايل واضغط (استيراد البيانات).');
-      }).catch(err => {
-        prompt('انسخ هذا الكود يدوياً:', jsonStr);
-      });
-    }
-
-    function importData() {
-      const jsonStr = prompt('الصق كود النسخ الاحتياطي هنا:');
-      if (jsonStr) {
-        try {
-          const data = JSON.parse(jsonStr);
-          if (data.menu) { localStorage.setItem('alfahm_menu', JSON.stringify(data.menu)); menuItems = data.menu; }
-          if (data.cats) { localStorage.setItem('alfahm_cats', JSON.stringify(data.cats)); categories = data.cats; }
-          if (data.orders) { localStorage.setItem('alfahm_orders_list', JSON.stringify(data.orders)); ordersList = data.orders; }
-          alert('تم استيراد كافة الأصناف والأوردرات بنجاح على الموبايل!');
-          location.reload();
-        } catch (e) {
-          alert('الكود غير صحيح.');
-        }
-      }
     }
   </script>
 </body>
