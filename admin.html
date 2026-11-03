@@ -78,6 +78,21 @@
         </div>
       </div>
 
+      <!-- File Backup & Sync Section -->
+      <div class="bg-neutral-900 border border-neutral-800 p-4 rounded-2xl space-y-3">
+        <h3 class="font-bold text-sm text-amber-500 flex items-center gap-2">
+          <i class="fa-solid fa-file-arrow-down"></i> نقل ونقل الأوردرات بملف بين الكمبيوتر والموبايل
+        </h3>
+        <p class="text-xs text-neutral-400">حمل ملف البيانات من الكمبيوتر، ثم افتح الموبايل واضغط رفع الملف لتظهر معك كل الأوردرات فوراً.</p>
+        <div class="flex flex-col md:flex-row gap-2">
+          <button onclick="exportDataFile()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-xl text-xs transition">1- تصدير ملف البيانات (من الكمبيوتر)</button>
+          <label class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 px-4 rounded-xl text-xs transition text-center cursor-pointer">
+            2- استيراد ملف البيانات (على الموبايل)
+            <input type="file" id="importFile" onchange="importDataFile(event)" accept=".json" class="hidden">
+          </label>
+        </div>
+      </div>
+
       <!-- Orders Management Section -->
       <div class="bg-neutral-900 border border-neutral-800 rounded-2xl p-5 space-y-4">
         <div class="flex items-center justify-between border-b border-neutral-800 pb-3">
@@ -87,7 +102,7 @@
             </h2>
             <p class="text-xs text-neutral-400 mt-0.5">تتبع تاريخ ووقت كل أوردر بدقة</p>
           </div>
-          <button onclick="clearAllOrders()" class="text-xs bg-red-950 text-red-400 border border-red-800 px-3 py-1.5 rounded-xl font-bold hover:bg-red-900">مسح السجل يدوياً</button>
+          <button onclick="clearAllOrders()" class="text-xs bg-red-950 text-red-400 border border-red-800 px-3 py-1.5 rounded-lg font-bold hover:bg-red-900">مسح السجل يدوياً</button>
         </div>
 
         <div id="ordersListContainer" class="space-y-3 max-h-96 overflow-y-auto pr-1"></div>
@@ -237,17 +252,6 @@
     let isStoreOpen = JSON.parse(localStorage.getItem('alfahm_open')) ?? true;
     let storeMsg = localStorage.getItem('alfahm_msg') || 'المطعم مغلق حالياً';
     let ordersList = JSON.parse(localStorage.getItem('alfahm_orders_list')) || [];
-
-    // --- AUTOMATIC CLOUD/LOCAL SYNC ACROSS DEVICES ---
-    window.addEventListener('storage', function(e) {
-      if (e.key === 'alfahm_orders_list' || e.key === 'alfahm_menu') {
-        ordersList = JSON.parse(localStorage.getItem('alfahm_orders_list')) || [];
-        menuItems = JSON.parse(localStorage.getItem('alfahm_menu')) || defaultMenu;
-        renderStats();
-        renderOrdersList();
-        renderAdminItems();
-      }
-    });
 
     function login() {
       const input = document.getElementById('passInput').value;
@@ -514,6 +518,43 @@
 
     function saveData() {
       localStorage.setItem('alfahm_menu', JSON.stringify(menuItems));
+    }
+
+    // Export Data to JSON File
+    function exportDataFile() {
+      const data = {
+        menu: menuItems,
+        cats: categories,
+        promos: promoCodes,
+        orders: ordersList
+      };
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", "alfahm_backup.json");
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    // Import Data from JSON File
+    function importDataFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          if (data.menu) { localStorage.setItem('alfahm_menu', JSON.stringify(data.menu)); menuItems = data.menu; }
+          if (data.cats) { localStorage.setItem('alfahm_cats', JSON.stringify(data.cats)); categories = data.cats; }
+          if (data.orders) { localStorage.setItem('alfahm_orders_list', JSON.stringify(data.orders)); ordersList = data.orders; }
+          alert('تم استيراد كافة البيانات والأوردرات بنجاح!');
+          location.reload();
+        } catch (err) {
+          alert('الملف غير صالح أو التنسيق غير صحيح.');
+        }
+      };
+      reader.readAsText(file);
     }
   </script>
 </body>
