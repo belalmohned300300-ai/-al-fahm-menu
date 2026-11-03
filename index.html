@@ -38,6 +38,20 @@
     </div>
   </div>
 
+  <!-- Success Order Screen (Hidden by default) -->
+  <div id="successScreen" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-neutral-900 border border-neutral-800 w-full max-w-sm rounded-3xl p-6 text-center space-y-4 shadow-2xl">
+      <div class="w-20 h-20 bg-emerald-950 border border-emerald-800 rounded-full flex items-center justify-center text-4xl text-emerald-400 mx-auto shadow-lg shadow-emerald-900/30">
+        <i class="fa-solid fa-check"></i>
+      </div>
+      <div>
+        <h2 class="text-xl font-extrabold text-white">تم إرسال طلبك بنجاح!</h2>
+        <p class="text-xs text-neutral-400 mt-1.5 leading-relaxed">شكراً لاختيارك "ع الفحم". تم تحويل طلبك للواتساب وجاري تجهيزه وتأكيده.</p>
+      </div>
+      <button onclick="resetAndReload()" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 rounded-xl text-sm transition">طلبات أخرى / العودة للمنيو</button>
+    </div>
+  </div>
+
   <!-- Main Container -->
   <main id="mainMenuContent" class="max-w-md mx-auto px-4 pt-4">
     <div class="relative mb-4">
@@ -257,13 +271,13 @@
       });
 
       if (filtered.length === 0) {
-        container.innerHTML = `<div class="text-center text-neutral-500 py-8">لا توجد نتائج مطابقة</div>`;
+        container.innerHTML = `<div class="text-center text-neutral-500 py-8">لا توجد نتائج متطابقة</div>`;
         return;
       }
 
       container.innerHTML = filtered.map(item => {
         const qty = cart[item.id] || 0;
-        const isOutOfStock = !item.available || (item.stock <= 0);
+        const isOutOfStock = !item.available || ((item.stock ?? 50) <= 0);
 
         return `
           <div class="bg-neutral-900 border border-neutral-800/80 rounded-2xl p-4 flex justify-between items-center ${isOutOfStock ? 'opacity-50' : ''}">
@@ -296,7 +310,7 @@
       if (!cart[id]) cart[id] = 0;
       let newQty = cart[id] + change;
 
-      if (newQty > (item.stock || 0)) {
+      if (newQty > (item.stock ?? 50)) {
         alert('عذراً، الكمية المطلوبة غير متوفرة بالكامل في المخزن!');
         return;
       }
@@ -376,11 +390,12 @@
       let subtotal = parseFloat(document.getElementById('subTotal').innerText);
       let finalTotal = parseFloat(document.getElementById('finalTotal').innerText);
 
-      // --- Deduct Inventory & Update Stats for Admin Dashboard ---
+      // --- Deduct Inventory & Update Stats ---
       for (let id in cart) {
         let item = menuItems.find(i => i.id == id);
         if (item) {
-          item.stock = Math.max(0, (item.stock || 0) - cart[id]);
+          let currentStock = item.stock ?? 50;
+          item.stock = Math.max(0, currentStock - cart[id]);
           item.soldOrders = (item.soldOrders || 0) + cart[id];
           if (item.stock === 0) item.available = false;
         }
@@ -389,6 +404,7 @@
       stats.orders += 1;
       stats.sales += finalTotal;
 
+      // Save directly to localStorage
       localStorage.setItem('alfahm_menu', JSON.stringify(menuItems));
       localStorage.setItem('alfahm_stats', JSON.stringify(stats));
 
@@ -408,7 +424,19 @@
       if (appliedDiscount > 0) msg += `\n*الخصم:* -${appliedDiscount.toFixed(1)} ج.م`;
       msg += `\n*الإجمالي النهائي:* ${finalTotal.toFixed(1)} ج.م\n`;
 
-      window.open(`https://wa.me/201121126633?text=${encodeURIComponent(msg)}`, '_blank');
+      // Close checkout modal and show success screen
+      closeCheckoutModal();
+      document.getElementById('successScreen').classList.remove('hidden');
+
+      // Open WhatsApp in background
+      setTimeout(() => {
+        window.open(`https://wa.me/201121126633?text=${encodeURIComponent(msg)}`, '_blank');
+      }, 500);
+    }
+
+    function resetAndReload() {
+      localStorage.setItem('alfahm_menu', JSON.stringify(menuItems));
+      localStorage.setItem('alfahm_stats', JSON.stringify(stats));
       location.reload();
     }
 
