@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
@@ -21,6 +21,19 @@
       </div>
       <input type="password" id="passInput" placeholder="أدخل كلمة السر" class="w-full bg-black border border-neutral-800 rounded-xl px-4 py-3 text-center text-white focus:outline-none focus:border-amber-500">
       <button onclick="login()" class="w-full bg-gradient-to-r from-red-600 to-amber-600 text-white font-bold py-3 rounded-xl shadow-lg hover:opacity-90 transition">دخول لوحة التحكم</button>
+    </div>
+  </div>
+
+  <!-- Order Details Modal -->
+  <div id="orderDetailsModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-neutral-900 border border-neutral-800 w-full max-w-md rounded-2xl p-5 space-y-4 max-h-[85vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b border-neutral-800 pb-2">
+        <h3 class="font-bold text-white text-base flex items-center gap-2">
+          <i class="fa-solid fa-receipt text-amber-500"></i> تفاصيل الأوردر
+        </h3>
+        <button onclick="closeOrderDetailsModal()" class="text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="modalOrderBody" class="space-y-3 text-xs"></div>
     </div>
   </div>
 
@@ -53,15 +66,33 @@
         </div>
 
         <div class="bg-neutral-900 border border-neutral-800 p-4 rounded-2xl flex flex-col justify-between">
-          <div class="text-xs text-neutral-400 font-bold">إجمالي الطلبات المسجلة</div>
+          <div class="text-xs text-neutral-400 font-bold">إجمالي الطلبات الواردة</div>
           <div class="text-3xl font-black text-amber-500" id="statOrdersCount">0</div>
-          <div class="text-[10px] text-neutral-500">عدد الأوردرات المباعة من المخزن</div>
+          <div class="text-[10px] text-neutral-500">عدد الأوردرات المسجلة من المنيو</div>
         </div>
 
         <div class="bg-neutral-900 border border-neutral-800 p-4 rounded-2xl flex flex-col justify-between">
           <div class="text-xs text-neutral-400 font-bold">إجمالي المبيعات التقديرية</div>
           <div class="text-3xl font-black text-emerald-500"><span id="statTotalSales">0</span> ج.م</div>
-          <div class="text-[10px] text-neutral-500">مجموع المبالغ من الطلبات</div>
+          <div class="text-[10px] text-neutral-500">مجموع مبيعات الطلبات</div>
+        </div>
+      </div>
+
+      <!-- Orders Management Section -->
+      <div class="bg-neutral-900 border border-neutral-800 rounded-2xl p-5 space-y-4">
+        <div class="flex items-center justify-between border-b border-neutral-800 pb-3">
+          <div>
+            <h2 class="font-bold text-base text-white flex items-center gap-2">
+              <i class="fa-solid fa-list-check text-amber-500"></i> سجل الطلبات الواردة
+            </h2>
+            <p class="text-xs text-neutral-400 mt-0.5">استعرض تفاصيل كل أوردر ومكوناته وتواصل مع العملاء</p>
+          </div>
+          <button onclick="clearAllOrders()" class="text-xs bg-red-950 text-red-400 border border-red-800 px-3 py-1.5 rounded-xl font-bold hover:bg-red-900">مسح السجل</button>
+        </div>
+
+        <!-- Orders List -->
+        <div id="ordersListContainer" class="space-y-3 max-h-96 overflow-y-auto pr-1">
+          <!-- Dynamic Orders -->
         </div>
       </div>
 
@@ -72,13 +103,12 @@
             <h2 class="font-bold text-base text-white flex items-center gap-2">
               <i class="fa-solid fa-warehouse text-amber-500"></i> قسم المخزن وإدارة جميع الأصناف
             </h2>
-            <p class="text-xs text-neutral-400 mt-0.5">تحكم كامل في إيقاف/تشغيل الصنف ومتابعة الأوردرات والكميات</p>
+            <p class="text-xs text-neutral-400 mt-0.5">إيقاف/تشغيل الأصناف ومتابعة الكميات والمبيعات</p>
           </div>
           <input type="text" id="searchAdminItem" oninput="renderAdminItems()" placeholder="بحث عن صنف بالاسم..." class="bg-black border border-neutral-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500 w-full md:w-60">
         </div>
 
-        <!-- Items Table / List -->
-        <div id="adminItemsList" class="space-y-3 max-h-[500px] overflow-y-auto pr-1">
+        <div id="adminItemsList" class="space-y-3 max-h-80 overflow-y-auto pr-1">
           <!-- Dynamic Items -->
         </div>
       </div>
@@ -139,79 +169,14 @@
   <script>
     const defaultCategories = ["الطواجن الرئيسية", "المكرونات", "طواجن موتزريلا", "الفته", "الوجبات", "وجبات الميكس", "المحشي", "المشويات الرئيسية", "حواوشي كبير ع الفحم"];
     
-    const defaultMenu = [
-      { id: 1, name: "طاجن كوارع ورق عنب", price: 300, stock: 50, soldOrders: 0, cat: "الطواجن الرئيسية", available: true },
-      { id: 2, name: "طاجن كوارع", price: 250, stock: 50, soldOrders: 0, cat: "الطواجن الرئيسية", available: true },
-      { id: 3, name: "طاجن كباب", price: 350, stock: 50, soldOrders: 0, cat: "الطواجن الرئيسية", available: true },
-      { id: 4, name: "طاجن لحمه بلدي", price: 350, stock: 50, soldOrders: 0, cat: "الطواجن الرئيسية", available: true },
-      { id: 5, name: "طاجن ملوخيه بالحمه", price: 400, stock: 50, soldOrders: 0, cat: "الطواجن الرئيسية", available: true },
-      { id: 6, name: "طاجن ملوخيه ساده", price: 125, stock: 50, soldOrders: 0, cat: "الطواجن الرئيسية", available: true },
-      { id: 7, name: "طاجن باميه بالحمه", price: 350, stock: 50, soldOrders: 0, cat: "الطواجن الرئيسية", available: true },
-      { id: 8, name: "طاجن لسان عصفور بالحمه", price: 250, stock: 50, soldOrders: 0, cat: "الطواجن الرئيسية", available: true },
-      { id: 9, name: "طاجن لسان عصفور ساده", price: 125, stock: 50, soldOrders: 0, cat: "الطواجن الرئيسية", available: true },
-      { id: 10, name: "مكرونه مع بانيه", price: 125, stock: 50, soldOrders: 0, cat: "المكرونات", available: true },
-      { id: 11, name: "مكرونه مع شيش طاوق", price: 125, stock: 50, soldOrders: 0, cat: "المكرونات", available: true },
-      { id: 12, name: "مكرونه مع كفته", price: 125, stock: 50, soldOrders: 0, cat: "المكرونات", available: true },
-      { id: 13, name: "مكرونه مع نص فرخه", price: 215, stock: 50, soldOrders: 0, cat: "المكرونات", available: true },
-      { id: 14, name: "مكرونه مع سجق", price: 125, stock: 50, soldOrders: 0, cat: "المكرونات", available: true },
-      { id: 15, name: "مكرونه مع شاورما", price: 160, stock: 50, soldOrders: 0, cat: "المكرونات", available: true },
-      { id: 16, name: "مكرونه مع كبده وقوانص", price: 125, stock: 50, soldOrders: 0, cat: "المكرونات", available: true },
-      { id: 17, name: "طاجن لحمه موتزريلا", price: 160, stock: 50, soldOrders: 0, cat: "طواجن موتزريلا", available: true },
-      { id: 18, name: "طاجن كفته موتزريلا", price: 160, stock: 50, soldOrders: 0, cat: "طواجن موتزريلا", available: true },
-      { id: 19, name: "طاجن سجق موتزريلا", price: 130, stock: 50, soldOrders: 0, cat: "طواجن موتزريلا", available: true },
-      { id: 20, name: "طاجن شيش طاوق موتزريلا", price: 160, stock: 50, soldOrders: 0, cat: "طواجن موتزريلا", available: true },
-      { id: 21, name: "طاجن شاورما لحمه موتزريلا", price: 170, stock: 50, soldOrders: 0, cat: "طواجن موتزريلا", available: true },
-      { id: 22, name: "طاجن شاورما فراخ موتزريلا", price: 150, stock: 50, soldOrders: 0, cat: "طواجن موتزريلا", available: true },
-      { id: 23, name: "فتة لحمه", price: 310, stock: 50, soldOrders: 0, cat: "الفته", available: true },
-      { id: 24, name: "فتة لحمه محمره", price: 330, stock: 50, soldOrders: 0, cat: "الفته", available: true },
-      { id: 25, name: "فته شاورما لحمه", price: 300, stock: 50, soldOrders: 0, cat: "الفته", available: true },
-      { id: 26, name: "فته شاورما فراخ", price: 250, stock: 50, soldOrders: 0, cat: "الفته", available: true },
-      { id: 27, name: "فتة كوارع", price: 300, stock: 50, soldOrders: 0, cat: "الفته", available: true },
-      { id: 28, name: "فته ساده", price: 125, stock: 50, soldOrders: 0, cat: "الفته", available: true },
-      { id: 29, name: "وجبة كفته", price: 180, stock: 50, soldOrders: 0, cat: "الوجبات", available: true },
-      { id: 30, name: "وجبة نص فرخه", price: 190, stock: 50, soldOrders: 0, cat: "الوجبات", available: true },
-      { id: 31, name: "وجبة ربع فرخه", price: 125, stock: 50, soldOrders: 0, cat: "الوجبات", available: true },
-      { id: 32, name: "وجبة شيش طاوق", price: 160, stock: 50, soldOrders: 0, cat: "الوجبات", available: true },
-      { id: 33, name: "وجبة لحمه بسمتي", price: 190, stock: 50, soldOrders: 0, cat: "الوجبات", available: true },
-      { id: 34, name: "وجبة ميكس فحم", price: 400, stock: 50, soldOrders: 0, cat: "الوجبات", available: true },
-      { id: 35, name: "وجبة ميكس جريل", price: 350, stock: 50, soldOrders: 0, cat: "الوجبات", available: true },
-      { id: 36, name: "وجبة ارز بالكبده وقوانص", price: 140, stock: 50, soldOrders: 0, cat: "الوجبات", available: true },
-      { id: 37, name: "وجبة نص فرخه مع كفته", price: 320, stock: 50, soldOrders: 0, cat: "وجبات الميكس", available: true },
-      { id: 38, name: "وجبة ربع فرخه مع كفته", price: 250, stock: 50, soldOrders: 0, cat: "وجبات الميكس", available: true },
-      { id: 39, name: "وجبة شيش طاوق مع كفته", price: 250, stock: 50, soldOrders: 0, cat: "وجبات الميكس", available: true },
-      { id: 40, name: "وجبة ورق عنب مع بانيه", price: 280, stock: 50, soldOrders: 0, cat: "المحشي", available: true },
-      { id: 41, name: "وجبة كرنب مع بانيه", price: 250, stock: 50, soldOrders: 0, cat: "المحشي", available: true },
-      { id: 42, name: "ورق عنب مع شيش طاوق", price: 270, stock: 50, soldOrders: 0, cat: "المحشي", available: true },
-      { id: 43, name: "كرنب مع شيش طاوق", price: 240, stock: 50, soldOrders: 0, cat: "المحشي", available: true },
-      { id: 44, name: "ورق عنب مع كفته", price: 290, stock: 50, soldOrders: 0, cat: "المحشي", available: true },
-      { id: 45, name: "كرنب مع كفته", price: 270, stock: 50, soldOrders: 0, cat: "المحشي", available: true },
-      { id: 46, name: "ورق عنب مع نص فرخه", price: 330, stock: 50, soldOrders: 0, cat: "المحشي", available: true },
-      { id: 47, name: "كرنب مع نص فرخه", price: 310, stock: 50, soldOrders: 0, cat: "المحشي", available: true },
-      { id: 48, name: "دجاجه كامله", price: 650, stock: 50, soldOrders: 0, cat: "المشويات الرئيسية", available: true },
-      { id: 49, name: "دجاج شيش", price: 600, stock: 50, soldOrders: 0, cat: "المشويات الرئيسية", available: true },
-      { id: 50, name: "نص كفته ضاني", price: 480, stock: 50, soldOrders: 0, cat: "المشويات الرئيسية", available: true },
-      { id: 51, name: "نص كفته كندوز", price: 410, stock: 50, soldOrders: 0, cat: "المشويات الرئيسية", available: true },
-      { id: 52, name: "نص كفته بلدي", price: 450, stock: 50, soldOrders: 0, cat: "المشويات الرئيسية", available: true },
-      { id: 53, name: "نص شيش", price: 320, stock: 50, soldOrders: 0, cat: "المشويات الرئيسية", available: true },
-      { id: 54, name: "نص بانيه", price: 350, stock: 50, soldOrders: 0, cat: "المشويات الرئيسية", available: true },
-      { id: 55, name: "نص كفته وطرب", price: 500, stock: 50, soldOrders: 0, cat: "المشويات الرئيسية", available: true },
-      { id: 56, name: "نص ميكس فحم", price: 650, stock: 50, soldOrders: 0, cat: "المشويات الرئيسية", available: true },
-      { id: 57, name: "نص ميكس جريل", price: 500, stock: 50, soldOrders: 0, cat: "المشويات الرئيسية", available: true },
-      { id: 58, name: "حواوشي كبير ع الفحم", price: 120, stock: 50, soldOrders: 0, cat: "حواوشي كبير ع الفحم", available: true },
-      { id: 59, name: "حواوشي متزريلا كبير ع الفحم", price: 140, stock: 50, soldOrders: 0, cat: "حواوشي كبير ع الفحم", available: true },
-      { id: 60, name: "حواوشي ميكس جبن كبير ع الفحم", price: 160, stock: 50, soldOrders: 0, cat: "حواوشي كبير ع الفحم", available: true },
-      { id: 61, name: "حواوشي بسطرمه كبير ع الفحم", price: 170, stock: 50, soldOrders: 0, cat: "حواوشي كبير ع الفحم", available: true },
-      { id: 62, name: "حواوشي سجق كبير ع الفحم", price: 170, stock: 50, soldOrders: 0, cat: "حواوشي كبير ع الفحم", available: true },
-      { id: 63, name: "حواوشي طرب كبير ع الفحم", price: 190, stock: 50, soldOrders: 0, cat: "حواوشي كبير ع الفحم", available: true }
-    ];
-
     let categories = JSON.parse(localStorage.getItem('alfahm_cats')) || defaultCategories;
-    let menuItems = JSON.parse(localStorage.getItem('alfahm_menu')) || defaultMenu;
+    let menuItems = JSON.parse(localStorage.getItem('alfahm_menu')) || [];
     let promoCodes = JSON.parse(localStorage.getItem('alfahm_promos')) || { 'OFF10': 10 };
     let adminPass = localStorage.getItem('alfahm_pass') || '1234';
     let isStoreOpen = JSON.parse(localStorage.getItem('alfahm_open')) ?? true;
-    let storeMsg = localStorage.getItem('alfahm_msg') || 'المطعم مغلق حالياً، نسعد باستقبال طلباتكم في أوقات العمل!';
+    let storeMsg = localStorage.getItem('alfahm_msg') || 'المطعم مغلق حالياً';
     let stats = JSON.parse(localStorage.getItem('alfahm_stats')) || { orders: 0, sales: 0 };
+    let ordersList = JSON.parse(localStorage.getItem('alfahm_orders_list')) || [];
 
     function login() {
       const input = document.getElementById('passInput').value;
@@ -229,6 +194,7 @@
     function initDash() {
       renderStatus();
       renderStats();
+      renderOrdersList();
       renderCategorySelect();
       renderAdminItems();
     }
@@ -258,8 +224,101 @@
     }
 
     function renderStats() {
-      document.getElementById('statOrdersCount').innerText = stats.orders;
-      document.getElementById('statTotalSales').innerText = stats.sales;
+      document.getElementById('statOrdersCount').innerText = ordersList.length;
+      let totalSales = ordersList.reduce((acc, order) => acc + (order.total || 0), 0);
+      document.getElementById('statTotalSales').innerText = totalSales.toFixed(1);
+    }
+
+    function renderOrdersList() {
+      const container = document.getElementById('ordersListContainer');
+      if (ordersList.length === 0) {
+        container.innerHTML = `<div class="text-center text-neutral-500 py-6 text-xs">لا توجد أوردرات واردة حتى الآن</div>`;
+        return;
+      }
+
+      container.innerHTML = ordersList.map((order, index) => `
+        <div class="bg-black border border-neutral-800 p-4 rounded-xl space-y-2 text-xs">
+          <div class="flex justify-between items-start border-b border-neutral-800/60 pb-2">
+            <div>
+              <div class="font-extrabold text-white text-sm flex items-center gap-2">
+                👤 ${order.name}
+                <span class="text-[10px] bg-neutral-900 text-amber-500 px-2 py-0.5 rounded border border-neutral-800 font-normal">${order.date || 'اليوم'}</span>
+              </div>
+              <div class="text-neutral-400 font-bold mt-0.5">📱 ${order.phone}</div>
+            </div>
+            <div class="text-left">
+              <span class="text-amber-500 font-black text-sm block">${order.total} ج.م</span>
+              <span class="text-[10px] px-2 py-0.5 rounded font-bold ${order.status === 'مكتمل' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-amber-950 text-amber-400 border border-amber-800'}">
+                ${order.status || 'جديد'}
+              </span>
+            </div>
+          </div>
+
+          <div class="text-neutral-400">📍 <span class="text-gray-300">${order.address}</span></div>
+          ${order.notes ? `<div class="text-neutral-400">📝 ملاحظات: <span class="text-amber-300 font-bold">${order.notes}</span></div>` : ''}
+
+          <div class="flex gap-2 pt-2 border-t border-neutral-800/40">
+            <button onclick="viewOrderDetails(${index})" class="flex-1 bg-amber-600 hover:bg-amber-500 text-white font-bold py-1.5 rounded-lg flex items-center justify-center gap-1">
+              <i class="fa-solid fa-eye"></i> عرض المحتويات
+            </button>
+            <button onclick="toggleOrderStatus(${index})" class="bg-neutral-800 hover:bg-neutral-700 text-emerald-400 border border-neutral-700 px-3 py-1.5 rounded-lg font-bold">
+              تغيير الحالة
+            </button>
+            <a href="https://wa.me/20${order.phone.replace(/^0/, '')}" target="_blank" class="bg-emerald-950 hover:bg-emerald-900 text-emerald-400 border border-emerald-800 px-3 py-1.5 rounded-lg font-bold flex items-center justify-center">
+              <i class="fa-brands fa-whatsapp text-sm"></i>
+            </a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function viewOrderDetails(index) {
+      const order = ordersList[index];
+      const modalBody = document.getElementById('modalOrderBody');
+
+      let itemsHtml = order.items.map(i => `
+        <div class="flex justify-between items-center bg-black p-2.5 rounded-lg border border-neutral-800">
+          <span class="text-white font-bold">${i.name} × ${i.qty}</span>
+          <span class="text-amber-500 font-extrabold">${i.price * i.qty} ج.م</span>
+        </div>
+      `).join('');
+
+      modalBody.innerHTML = `
+        <div class="bg-black p-3 rounded-xl border border-neutral-800 space-y-1">
+          <div><strong class="text-neutral-400">العميل:</strong> ${order.name}</div>
+          <div><strong class="text-neutral-400">الهاتف:</strong> ${order.phone}</div>
+          <div><strong class="text-neutral-400">العنوان:</strong> ${order.address}</div>
+          ${order.notes ? `<div><strong class="text-neutral-400">ملاحظات:</strong> ${order.notes}</div>` : ''}
+        </div>
+        <div class="font-bold text-white text-xs pt-1">الأصناف المطلوبة:</div>
+        <div class="space-y-1.5">${itemsHtml}</div>
+        <div class="bg-neutral-950 p-2.5 rounded-xl border border-neutral-800 flex justify-between font-black text-sm text-white">
+          <span>الإجمالي النهائي:</span>
+          <span class="text-amber-500">${order.total} ج.م</span>
+        </div>
+      `;
+
+      document.getElementById('orderDetailsModal').classList.remove('hidden');
+    }
+
+    function closeOrderDetailsModal() {
+      document.getElementById('orderDetailsModal').classList.add('hidden');
+    }
+
+    function toggleOrderStatus(index) {
+      let current = ordersList[index].status || 'جديد';
+      ordersList[index].status = current === 'جديد' ? 'جاري التجهيز' : (current === 'جاري التجهيز' ? 'مكتمل' : 'جديد');
+      localStorage.setItem('alfahm_orders_list', JSON.stringify(ordersList));
+      renderOrdersList();
+    }
+
+    function clearAllOrders() {
+      if (confirm('هل أنت تأكد من مسح جميع الأوردرات من السجل؟')) {
+        ordersList = [];
+        localStorage.setItem('alfahm_orders_list', JSON.stringify(ordersList));
+        renderOrdersList();
+        renderStats();
+      }
     }
 
     function renderCategorySelect() {
@@ -291,7 +350,6 @@
             </div>
           </div>
 
-          <!-- Stock & Availability Controls -->
           <div class="flex items-center gap-2 flex-wrap">
             <div class="flex items-center gap-1.5 bg-neutral-900 px-2 py-1 rounded-lg border border-neutral-800">
               <span class="text-neutral-400 font-bold">المخزن:</span>
@@ -314,29 +372,17 @@
 
     function updateStock(id, val) {
       let item = menuItems.find(i => i.id == id);
-      if (item) { 
-        item.stock = parseInt(val) || 0; 
-        saveData(); 
-        renderAdminItems();
-      }
+      if (item) { item.stock = parseInt(val) || 0; saveData(); renderAdminItems(); }
     }
 
     function addStock(id, amount) {
       let item = menuItems.find(i => i.id == id);
-      if (item) { 
-        item.stock = (item.stock || 0) + amount; 
-        saveData(); 
-        renderAdminItems();
-      }
+      if (item) { item.stock = (item.stock || 0) + amount; saveData(); renderAdminItems(); }
     }
 
     function toggleAvailability(id) {
       let item = menuItems.find(i => i.id == id);
-      if (item) { 
-        item.available = !item.available; 
-        saveData(); 
-        renderAdminItems(); 
-      }
+      if (item) { item.available = !item.available; saveData(); renderAdminItems(); }
     }
 
     function addNewItem() {
@@ -353,8 +399,6 @@
         document.getElementById('newItemPrice').value = '';
         document.getElementById('newItemStock').value = '';
         alert('تم إضافة الصنف للمخزن والمنيو بنجاح!');
-      } else {
-        alert('برجاء إدخال اسم الصنف والسعر صحيحاً!');
       }
     }
 
