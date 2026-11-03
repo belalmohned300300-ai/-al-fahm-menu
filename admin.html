@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
@@ -41,54 +41,55 @@
 
       <!-- Status & Stats Card -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <!-- Restaurant Status Toggle -->
-        <div class="bg-neutral-900 border border-neutral-800 p-4 rounded-2xl space-y-3 md:col-span-1">
+        <div class="bg-neutral-900 border border-neutral-800 p-4 rounded-2xl space-y-3">
           <h3 class="font-bold text-sm text-neutral-400 flex items-center gap-2">
             <i class="fa-solid fa-store text-amber-500"></i> حالة المطعم الآن
           </h3>
           <div class="flex items-center justify-between">
-            <span id="statusBadge" class="px-3 py-1 rounded-full text-xs font-black">جاري التحميل...</span>
+            <span id="statusBadge" class="px-3 py-1 rounded-full text-xs font-black">مفتوح</span>
             <button onclick="toggleRestaurantStatus()" class="bg-neutral-800 border border-neutral-700 text-xs px-3 py-1.5 rounded-xl font-bold hover:bg-neutral-700">تغيير الحالة</button>
           </div>
           <input type="text" id="statusMsgInput" onchange="updateStatusMsg()" placeholder="رسالة الإغلاق للعملاء..." class="w-full bg-black border border-neutral-800 rounded-xl px-3 py-2 text-xs text-white">
         </div>
 
-        <!-- Orders & Revenue Stats -->
         <div class="bg-neutral-900 border border-neutral-800 p-4 rounded-2xl flex flex-col justify-between">
-          <div class="text-xs text-neutral-400 font-bold">إجمالي طلبات اليوم</div>
+          <div class="text-xs text-neutral-400 font-bold">إجمالي الطلبات المسجلة</div>
           <div class="text-3xl font-black text-amber-500" id="statOrdersCount">0</div>
-          <div class="text-[10px] text-neutral-500">يتحدد تلقائياً مع طلبات الواتساب</div>
+          <div class="text-[10px] text-neutral-500">عدد الأوردرات المباعة من المخزن</div>
         </div>
 
         <div class="bg-neutral-900 border border-neutral-800 p-4 rounded-2xl flex flex-col justify-between">
           <div class="text-xs text-neutral-400 font-bold">إجمالي المبيعات التقديرية</div>
           <div class="text-3xl font-black text-emerald-500"><span id="statTotalSales">0</span> ج.م</div>
-          <div class="text-[10px] text-neutral-500">مجموع المبالغ المطلوبة</div>
+          <div class="text-[10px] text-neutral-500">مجموع المبالغ من الطلبات</div>
         </div>
       </div>
 
-      <!-- Inventory & Price Control Section -->
+      <!-- Inventory & All Items Management Section -->
       <div class="bg-neutral-900 border border-neutral-800 rounded-2xl p-5 space-y-4">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 border-b border-neutral-800 pb-3">
-          <h2 class="font-bold text-base text-white flex items-center gap-2">
-            <i class="fa-solid fa-boxes-stacked text-amber-500"></i> إدارة المخزن والأسعار والأصناف
-          </h2>
-          <input type="text" id="searchAdminItem" oninput="renderAdminItems()" placeholder="بحث عن صنف..." class="bg-black border border-neutral-800 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-neutral-800 pb-3">
+          <div>
+            <h2 class="font-bold text-base text-white flex items-center gap-2">
+              <i class="fa-solid fa-warehouse text-amber-500"></i> قسم المخزن وإدارة جميع الأصناف
+            </h2>
+            <p class="text-xs text-neutral-400 mt-0.5">تحكم كامل في إيقاف/تشغيل الصنف ومتابعة الأوردرات والكميات</p>
+          </div>
+          <input type="text" id="searchAdminItem" oninput="renderAdminItems()" placeholder="بحث عن صنف بالاسم..." class="bg-black border border-neutral-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500 w-full md:w-60">
         </div>
 
-        <div id="adminItemsList" class="space-y-3 max-h-96 overflow-y-auto pr-1">
-          <!-- Dynamic Items List -->
+        <!-- Items Table / List -->
+        <div id="adminItemsList" class="space-y-3 max-h-[500px] overflow-y-auto pr-1">
+          <!-- Dynamic Items -->
         </div>
       </div>
 
       <!-- Add New Item & Category Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Add Item -->
         <div class="bg-neutral-900 border border-neutral-800 p-5 rounded-2xl space-y-3">
           <h3 class="font-bold text-sm text-amber-500 flex items-center gap-2">
-            <i class="fa-solid fa-plus-circle"></i> إضافة صنف جديد
+            <i class="fa-solid fa-plus-circle"></i> إضافة صنف جديد للمنيو والمخزن
           </h3>
-          <input type="text" id="newItemName" placeholder="اسم الصنف" class="w-full bg-black border border-neutral-800 rounded-xl px-3 py-2 text-xs text-white">
+          <input type="text" id="newItemName" placeholder="اسم الصنف الجديد" class="w-full bg-black border border-neutral-800 rounded-xl px-3 py-2 text-xs text-white">
           <div class="flex gap-2">
             <input type="number" id="newItemPrice" placeholder="السعر (ج.م)" class="w-1/2 bg-black border border-neutral-800 rounded-xl px-3 py-2 text-xs text-white">
             <input type="number" id="newItemStock" placeholder="الكمية بالمخزن" class="w-1/2 bg-black border border-neutral-800 rounded-xl px-3 py-2 text-xs text-white">
@@ -97,9 +98,7 @@
           <button onclick="addNewItem()" class="w-full bg-emerald-600 hover:bg-emerald-500 font-bold py-2.5 rounded-xl text-xs transition">حفظ وإضافة للمنيو</button>
         </div>
 
-        <!-- Add Category & Promos -->
         <div class="space-y-6">
-          <!-- Add Category -->
           <div class="bg-neutral-900 border border-neutral-800 p-5 rounded-2xl space-y-3">
             <h3 class="font-bold text-sm text-amber-500 flex items-center gap-2">
               <i class="fa-solid fa-folder-plus"></i> إضافة قسم جديد للمنيو
@@ -110,7 +109,6 @@
             </div>
           </div>
 
-          <!-- Add Promo Code -->
           <div class="bg-neutral-900 border border-neutral-800 p-5 rounded-2xl space-y-3">
             <h3 class="font-bold text-sm text-amber-500 flex items-center gap-2">
               <i class="fa-solid fa-ticket"></i> إضافة كود خصم
@@ -124,7 +122,7 @@
         </div>
       </div>
 
-      <!-- Change Admin Password -->
+      <!-- Change Password -->
       <div class="bg-neutral-900 border border-neutral-800 p-5 rounded-2xl space-y-3">
         <h3 class="font-bold text-sm text-neutral-300 flex items-center gap-2">
           <i class="fa-solid fa-key text-amber-500"></i> تغيير كلمة سر لوحة التحكم
@@ -141,8 +139,74 @@
   <script>
     const defaultCategories = ["الطواجن الرئيسية", "المكرونات", "طواجن موتزريلا", "الفته", "الوجبات", "وجبات الميكس", "المحشي", "المشويات الرئيسية", "حواوشي كبير ع الفحم"];
     
+    const defaultMenu = [
+      { id: 1, name: "طاجن كوارع ورق عنب", price: 300, stock: 50, soldOrders: 0, cat: "الطواجن الرئيسية", available: true },
+      { id: 2, name: "طاجن كوارع", price: 250, stock: 50, soldOrders: 0, cat: "الطواجن الرئيسية", available: true },
+      { id: 3, name: "طاجن كباب", price: 350, stock: 50, soldOrders: 0, cat: "الطواجن الرئيسية", available: true },
+      { id: 4, name: "طاجن لحمه بلدي", price: 350, stock: 50, soldOrders: 0, cat: "الطواجن الرئيسية", available: true },
+      { id: 5, name: "طاجن ملوخيه بالحمه", price: 400, stock: 50, soldOrders: 0, cat: "الطواجن الرئيسية", available: true },
+      { id: 6, name: "طاجن ملوخيه ساده", price: 125, stock: 50, soldOrders: 0, cat: "الطواجن الرئيسية", available: true },
+      { id: 7, name: "طاجن باميه بالحمه", price: 350, stock: 50, soldOrders: 0, cat: "الطواجن الرئيسية", available: true },
+      { id: 8, name: "طاجن لسان عصفور بالحمه", price: 250, stock: 50, soldOrders: 0, cat: "الطواجن الرئيسية", available: true },
+      { id: 9, name: "طاجن لسان عصفور ساده", price: 125, stock: 50, soldOrders: 0, cat: "الطواجن الرئيسية", available: true },
+      { id: 10, name: "مكرونه مع بانيه", price: 125, stock: 50, soldOrders: 0, cat: "المكرونات", available: true },
+      { id: 11, name: "مكرونه مع شيش طاوق", price: 125, stock: 50, soldOrders: 0, cat: "المكرونات", available: true },
+      { id: 12, name: "مكرونه مع كفته", price: 125, stock: 50, soldOrders: 0, cat: "المكرونات", available: true },
+      { id: 13, name: "مكرونه مع نص فرخه", price: 215, stock: 50, soldOrders: 0, cat: "المكرونات", available: true },
+      { id: 14, name: "مكرونه مع سجق", price: 125, stock: 50, soldOrders: 0, cat: "المكرونات", available: true },
+      { id: 15, name: "مكرونه مع شاورما", price: 160, stock: 50, soldOrders: 0, cat: "المكرونات", available: true },
+      { id: 16, name: "مكرونه مع كبده وقوانص", price: 125, stock: 50, soldOrders: 0, cat: "المكرونات", available: true },
+      { id: 17, name: "طاجن لحمه موتزريلا", price: 160, stock: 50, soldOrders: 0, cat: "طواجن موتزريلا", available: true },
+      { id: 18, name: "طاجن كفته موتزريلا", price: 160, stock: 50, soldOrders: 0, cat: "طواجن موتزريلا", available: true },
+      { id: 19, name: "طاجن سجق موتزريلا", price: 130, stock: 50, soldOrders: 0, cat: "طواجن موتزريلا", available: true },
+      { id: 20, name: "طاجن شيش طاوق موتزريلا", price: 160, stock: 50, soldOrders: 0, cat: "طواجن موتزريلا", available: true },
+      { id: 21, name: "طاجن شاورما لحمه موتزريلا", price: 170, stock: 50, soldOrders: 0, cat: "طواجن موتزريلا", available: true },
+      { id: 22, name: "طاجن شاورما فراخ موتزريلا", price: 150, stock: 50, soldOrders: 0, cat: "طواجن موتزريلا", available: true },
+      { id: 23, name: "فتة لحمه", price: 310, stock: 50, soldOrders: 0, cat: "الفته", available: true },
+      { id: 24, name: "فتة لحمه محمره", price: 330, stock: 50, soldOrders: 0, cat: "الفته", available: true },
+      { id: 25, name: "فته شاورما لحمه", price: 300, stock: 50, soldOrders: 0, cat: "الفته", available: true },
+      { id: 26, name: "فته شاورما فراخ", price: 250, stock: 50, soldOrders: 0, cat: "الفته", available: true },
+      { id: 27, name: "فتة كوارع", price: 300, stock: 50, soldOrders: 0, cat: "الفته", available: true },
+      { id: 28, name: "فته ساده", price: 125, stock: 50, soldOrders: 0, cat: "الفته", available: true },
+      { id: 29, name: "وجبة كفته", price: 180, stock: 50, soldOrders: 0, cat: "الوجبات", available: true },
+      { id: 30, name: "وجبة نص فرخه", price: 190, stock: 50, soldOrders: 0, cat: "الوجبات", available: true },
+      { id: 31, name: "وجبة ربع فرخه", price: 125, stock: 50, soldOrders: 0, cat: "الوجبات", available: true },
+      { id: 32, name: "وجبة شيش طاوق", price: 160, stock: 50, soldOrders: 0, cat: "الوجبات", available: true },
+      { id: 33, name: "وجبة لحمه بسمتي", price: 190, stock: 50, soldOrders: 0, cat: "الوجبات", available: true },
+      { id: 34, name: "وجبة ميكس فحم", price: 400, stock: 50, soldOrders: 0, cat: "الوجبات", available: true },
+      { id: 35, name: "وجبة ميكس جريل", price: 350, stock: 50, soldOrders: 0, cat: "الوجبات", available: true },
+      { id: 36, name: "وجبة ارز بالكبده وقوانص", price: 140, stock: 50, soldOrders: 0, cat: "الوجبات", available: true },
+      { id: 37, name: "وجبة نص فرخه مع كفته", price: 320, stock: 50, soldOrders: 0, cat: "وجبات الميكس", available: true },
+      { id: 38, name: "وجبة ربع فرخه مع كفته", price: 250, stock: 50, soldOrders: 0, cat: "وجبات الميكس", available: true },
+      { id: 39, name: "وجبة شيش طاوق مع كفته", price: 250, stock: 50, soldOrders: 0, cat: "وجبات الميكس", available: true },
+      { id: 40, name: "وجبة ورق عنب مع بانيه", price: 280, stock: 50, soldOrders: 0, cat: "المحشي", available: true },
+      { id: 41, name: "وجبة كرنب مع بانيه", price: 250, stock: 50, soldOrders: 0, cat: "المحشي", available: true },
+      { id: 42, name: "ورق عنب مع شيش طاوق", price: 270, stock: 50, soldOrders: 0, cat: "المحشي", available: true },
+      { id: 43, name: "كرنب مع شيش طاوق", price: 240, stock: 50, soldOrders: 0, cat: "المحشي", available: true },
+      { id: 44, name: "ورق عنب مع كفته", price: 290, stock: 50, soldOrders: 0, cat: "المحشي", available: true },
+      { id: 45, name: "كرنب مع كفته", price: 270, stock: 50, soldOrders: 0, cat: "المحشي", available: true },
+      { id: 46, name: "ورق عنب مع نص فرخه", price: 330, stock: 50, soldOrders: 0, cat: "المحشي", available: true },
+      { id: 47, name: "كرنب مع نص فرخه", price: 310, stock: 50, soldOrders: 0, cat: "المحشي", available: true },
+      { id: 48, name: "دجاجه كامله", price: 650, stock: 50, soldOrders: 0, cat: "المشويات الرئيسية", available: true },
+      { id: 49, name: "دجاج شيش", price: 600, stock: 50, soldOrders: 0, cat: "المشويات الرئيسية", available: true },
+      { id: 50, name: "نص كفته ضاني", price: 480, stock: 50, soldOrders: 0, cat: "المشويات الرئيسية", available: true },
+      { id: 51, name: "نص كفته كندوز", price: 410, stock: 50, soldOrders: 0, cat: "المشويات الرئيسية", available: true },
+      { id: 52, name: "نص كفته بلدي", price: 450, stock: 50, soldOrders: 0, cat: "المشويات الرئيسية", available: true },
+      { id: 53, name: "نص شيش", price: 320, stock: 50, soldOrders: 0, cat: "المشويات الرئيسية", available: true },
+      { id: 54, name: "نص بانيه", price: 350, stock: 50, soldOrders: 0, cat: "المشويات الرئيسية", available: true },
+      { id: 55, name: "نص كفته وطرب", price: 500, stock: 50, soldOrders: 0, cat: "المشويات الرئيسية", available: true },
+      { id: 56, name: "نص ميكس فحم", price: 650, stock: 50, soldOrders: 0, cat: "المشويات الرئيسية", available: true },
+      { id: 57, name: "نص ميكس جريل", price: 500, stock: 50, soldOrders: 0, cat: "المشويات الرئيسية", available: true },
+      { id: 58, name: "حواوشي كبير ع الفحم", price: 120, stock: 50, soldOrders: 0, cat: "حواوشي كبير ع الفحم", available: true },
+      { id: 59, name: "حواوشي متزريلا كبير ع الفحم", price: 140, stock: 50, soldOrders: 0, cat: "حواوشي كبير ع الفحم", available: true },
+      { id: 60, name: "حواوشي ميكس جبن كبير ع الفحم", price: 160, stock: 50, soldOrders: 0, cat: "حواوشي كبير ع الفحم", available: true },
+      { id: 61, name: "حواوشي بسطرمه كبير ع الفحم", price: 170, stock: 50, soldOrders: 0, cat: "حواوشي كبير ع الفحم", available: true },
+      { id: 62, name: "حواوشي سجق كبير ع الفحم", price: 170, stock: 50, soldOrders: 0, cat: "حواوشي كبير ع الفحم", available: true },
+      { id: 63, name: "حواوشي طرب كبير ع الفحم", price: 190, stock: 50, soldOrders: 0, cat: "حواوشي كبير ع الفحم", available: true }
+    ];
+
     let categories = JSON.parse(localStorage.getItem('alfahm_cats')) || defaultCategories;
-    let menuItems = JSON.parse(localStorage.getItem('alfahm_menu')) || [];
+    let menuItems = JSON.parse(localStorage.getItem('alfahm_menu')) || defaultMenu;
     let promoCodes = JSON.parse(localStorage.getItem('alfahm_promos')) || { 'OFF10': 10 };
     let adminPass = localStorage.getItem('alfahm_pass') || '1234';
     let isStoreOpen = JSON.parse(localStorage.getItem('alfahm_open')) ?? true;
@@ -160,9 +224,7 @@
       }
     }
 
-    function logout() {
-      location.reload();
-    }
+    function logout() { location.reload(); }
 
     function initDash() {
       renderStatus();
@@ -175,10 +237,10 @@
       const badge = document.getElementById('statusBadge');
       if (isStoreOpen) {
         badge.className = "px-3 py-1 rounded-full text-xs font-black bg-emerald-950 text-emerald-400 border border-emerald-800";
-        badge.innerText = "المطعم مفتوح الآن";
+        badge.innerText = "مفتوح";
       } else {
         badge.className = "px-3 py-1 rounded-full text-xs font-black bg-red-950 text-red-400 border border-red-800";
-        badge.innerText = "المطعم مغلق حالياً";
+        badge.innerText = "مغلق";
       }
       document.getElementById('statusMsgInput').value = storeMsg;
     }
@@ -192,7 +254,7 @@
     function updateStatusMsg() {
       storeMsg = document.getElementById('statusMsgInput').value;
       localStorage.setItem('alfahm_msg', storeMsg);
-      alert('تم حفظ الرسالة التنبيهية للعملاء');
+      alert('تم حفظ رسالة الإغلاق');
     }
 
     function renderStats() {
@@ -211,28 +273,36 @@
 
       let filtered = menuItems.filter(i => i.name.toLowerCase().includes(search));
 
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="text-center text-neutral-500 py-6 text-xs">لا توجد أصناف مطابقة للبحث</div>`;
+        return;
+      }
+
       container.innerHTML = filtered.map(item => `
-        <div class="bg-black border border-neutral-800 p-3 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+        <div class="bg-black border border-neutral-800 p-3.5 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
           <div class="space-y-1 flex-1">
-            <div class="font-bold text-white text-sm">${item.name} <span class="text-[10px] text-amber-500 font-normal">(${item.cat})</span></div>
-            <div class="flex items-center gap-2 text-neutral-400">
-              <span>السعر:</span>
-              <input type="number" value="${item.price}" onchange="updatePrice(${item.id}, this.value)" class="w-16 bg-neutral-900 border border-neutral-700 text-center text-amber-500 rounded py-0.5 font-bold">
-              <span>ج.م</span>
+            <div class="font-extrabold text-white text-sm flex items-center gap-2">
+              ${item.name} 
+              <span class="text-[10px] bg-neutral-900 text-amber-500 px-2 py-0.5 rounded border border-neutral-800 font-normal">${item.cat}</span>
+            </div>
+            <div class="flex items-center gap-4 text-neutral-400">
+              <span>السعر: <input type="number" value="${item.price}" onchange="updatePrice(${item.id}, this.value)" class="w-16 bg-neutral-900 border border-neutral-700 text-center text-amber-500 rounded py-0.5 font-bold"> ج.م</span>
+              <span class="text-amber-400 font-bold bg-neutral-900 px-2 py-0.5 rounded border border-neutral-800">عدد الطلبات المباعة: ${item.soldOrders || 0} أوردر</span>
             </div>
           </div>
 
-          <!-- Inventory Control -->
-          <div class="flex items-center gap-2 bg-neutral-900 p-1.5 rounded-lg border border-neutral-800">
-            <span class="text-neutral-400 font-bold">المخزون:</span>
-            <input type="number" value="${item.stock ?? 50}" onchange="updateStock(${item.id}, this.value)" class="w-14 bg-black border border-neutral-700 text-center text-emerald-400 rounded py-0.5 font-bold">
-            <button onclick="addStock(${item.id}, 10)" class="bg-emerald-950 hover:bg-emerald-900 text-emerald-400 border border-emerald-800 px-2 py-0.5 rounded font-bold">+10 توريد</button>
-          </div>
+          <!-- Stock & Availability Controls -->
+          <div class="flex items-center gap-2 flex-wrap">
+            <div class="flex items-center gap-1.5 bg-neutral-900 px-2 py-1 rounded-lg border border-neutral-800">
+              <span class="text-neutral-400 font-bold">المخزن:</span>
+              <input type="number" value="${item.stock ?? 50}" onchange="updateStock(${item.id}, this.value)" class="w-12 bg-black border border-neutral-700 text-center text-emerald-400 rounded py-0.5 font-bold">
+              <button onclick="addStock(${item.id}, 10)" class="bg-emerald-950 hover:bg-emerald-900 text-emerald-400 border border-emerald-800 px-2 py-0.5 rounded font-bold">+10 توريد</button>
+            </div>
 
-          <!-- Availability Toggle -->
-          <button onclick="toggleAvailability(${item.id})" class="px-3 py-1.5 rounded-lg font-bold border ${item.available ? 'bg-emerald-950 text-emerald-400 border-emerald-800' : 'bg-red-950 text-red-400 border-red-800'}">
-            ${item.available ? 'متاح' : 'مغلق'}
-          </button>
+            <button onclick="toggleAvailability(${item.id})" class="px-4 py-1.5 rounded-lg font-bold border transition ${item.available ? 'bg-emerald-950 text-emerald-400 border-emerald-800 hover:bg-emerald-900' : 'bg-red-950 text-red-400 border-red-800 hover:bg-red-900'}">
+              ${item.available ? '<i class="fa-solid fa-check"></i> الصنف مفتوح' : '<i class="fa-solid fa-xmark"></i> الصنف مغلق'}
+            </button>
+          </div>
         </div>
       `).join('');
     }
@@ -246,7 +316,6 @@
       let item = menuItems.find(i => i.id == id);
       if (item) { 
         item.stock = parseInt(val) || 0; 
-        if (item.stock <= 0) item.available = false;
         saveData(); 
         renderAdminItems();
       }
@@ -256,7 +325,6 @@
       let item = menuItems.find(i => i.id == id);
       if (item) { 
         item.stock = (item.stock || 0) + amount; 
-        if (item.stock > 0) item.available = true;
         saveData(); 
         renderAdminItems();
       }
@@ -264,7 +332,11 @@
 
     function toggleAvailability(id) {
       let item = menuItems.find(i => i.id == id);
-      if (item) { item.available = !item.available; saveData(); renderAdminItems(); }
+      if (item) { 
+        item.available = !item.available; 
+        saveData(); 
+        renderAdminItems(); 
+      }
     }
 
     function addNewItem() {
@@ -274,12 +346,15 @@
       const cat = document.getElementById('newItemCatSelect').value;
 
       if (name && price) {
-        menuItems.push({ id: Date.now(), name, price, stock, cat, available: true });
+        menuItems.push({ id: Date.now(), name, price, stock, soldOrders: 0, cat, available: true });
         saveData();
         renderAdminItems();
         document.getElementById('newItemName').value = '';
         document.getElementById('newItemPrice').value = '';
+        document.getElementById('newItemStock').value = '';
         alert('تم إضافة الصنف للمخزن والمنيو بنجاح!');
+      } else {
+        alert('برجاء إدخال اسم الصنف والسعر صحيحاً!');
       }
     }
 
@@ -302,7 +377,7 @@
         localStorage.setItem('alfahm_promos', JSON.stringify(promoCodes));
         document.getElementById('promoCodeName').value = '';
         document.getElementById('promoPercent').value = '';
-        alert(`تم تفعيل كود الخصم ${code} بنسبة ${percent}%`);
+        alert(`تم تفعيل كود الخصم ${code}`);
       }
     }
 
@@ -311,7 +386,7 @@
       if (newP) {
         adminPass = newP;
         localStorage.setItem('alfahm_pass', adminPass);
-        alert('تم تغيير كلمة سر لوحة التحكم بنجاح!');
+        alert('تم تغيير كلمة السر بنجاح!');
       }
     }
 
