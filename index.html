@@ -1,535 +1,625 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منيو مطعم ع الفحم الإلكتروني</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Cairo -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            amber: '#f59e0b',
-                            red: '#dc2626',
-                            dark: '#121212',
-                            card: '#1e1e1e',
-                            gold: '#fbbf24'
-                        }
-                    },
-                    fontFamily: {
-                        cairo: ['Cairo', 'sans-serif']
-                    }
-                }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>منيو مطعم ع الفحم الإلكتروني</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts: Cairo -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              amber: '#f59e0b',
+              red: '#dc2626',
+              dark: '#121212',
+              card: '#1e1e1e',
+              border: '#2e2e2e'
             }
+          },
+          fontFamily: {
+            cairo: ['Cairo', 'sans-serif']
+          }
         }
-    </script>
-    <style>
-        body {
-            font-family: 'Cairo', sans-serif;
-            background-color: #0d0d0d;
-            color: #f3f4f6;
-        }
-        /* Watermark Background Style */
-        .watermark-bg {
-            position: relative;
-        }
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #121212;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #f59e0b;
-            border-radius: 4px;
-        }
-        .glass-card {
-            background: rgba(30, 30, 30, 0.85);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(245, 158, 11, 0.15);
-        }
-    </style>
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Cairo', sans-serif; background-color: #0d0d0d; color: #f3f4f6; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
 </head>
-<body class="watermark-bg min-h-screen pb-24">
+<body class="bg-black text-gray-100 min-h-screen pb-32">
 
-    <!-- Header Section -->
-    <header class="relative z-10 text-center py-6 px-4 border-b border-amber-500/20 bg-black/60 backdrop-blur-md sticky top-0">
-        <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-red-600 flex items-center justify-center text-black text-2xl font-black shadow-lg shadow-amber-500/20">
-                    <i class="fa-solid fa-fire"></i>
-                </div>
-                <div class="text-right">
-                    <h1 class="text-3xl font-black text-amber-500 tracking-wide flex items-center gap-2">
-                        <span>ع الفحم</span>
-                    </h1>
-                    <p class="text-xs text-gray-400 mt-1">أصل الطواجن والمشويات ع الفحم 🔥</p>
-                </div>
-            </div>
-            
-            <div class="flex items-center gap-3">
-                <a href="tel:01121126633" class="flex items-center gap-2 bg-amber-500/10 border border-amber-500/40 text-amber-400 px-4 py-2 rounded-xl text-sm font-bold hover:bg-amber-500 hover:text-black transition-all">
-                    <i class="fa-solid fa-phone"></i>
-                    <span>01121126633</span>
-                </a>
-            </div>
+  <!-- Header -->
+  <header class="sticky top-0 z-30 bg-black/90 backdrop-blur-md border-b border-neutral-800 px-4 py-3">
+    <div class="max-w-md mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-2 cursor-pointer" onclick="handleSecretClick()">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-red-600 to-amber-500 flex items-center justify-center font-black text-xl shadow-lg shadow-red-900/40">
+          🔥
         </div>
-    </header>
+        <div>
+          <h1 class="font-extrabold text-lg text-white leading-none">ع الفحم</h1>
+          <span class="text-xs text-amber-500 font-bold">للمشويات والطواجن</span>
+        </div>
+      </div>
+      
+      <!-- Owner Dashboard Trigger -->
+      <button onclick="openAdminModal()" class="w-9 h-9 rounded-full bg-neutral-900 border border-neutral-700 flex items-center justify-center text-gray-400 hover:text-amber-500 transition">
+        <i class="fa-solid fa-gear text-sm"></i>
+      </button>
+    </div>
+  </header>
 
-    <!-- Categories Navigation Tab Bar -->
-    <nav class="sticky top-[105px] z-20 bg-black/90 backdrop-blur-md py-3 px-2 border-b border-gray-800 shadow-xl overflow-x-auto whitespace-nowrap no-scrollbar">
-        <div class="max-w-4xl mx-auto flex gap-2 px-2" id="categories-tabs">
-            <!-- Dynamic Category Buttons populated by JS -->
-        </div>
-    </nav>
+  <!-- Main Container -->
+  <main class="max-w-md mx-auto px-4 pt-4">
 
     <!-- Search Bar -->
-    <div class="max-w-4xl mx-auto px-4 mt-4 relative z-10">
-        <div class="relative">
-            <i class="fa-solid fa-magnifying-glass absolute right-4 top-1/2 -translate-y-1/2 text-amber-500"></i>
-            <input type="text" id="search-input" placeholder="ابحث عن صنفك المفضل..." oninput="filterItems()" class="w-full bg-zinc-900/90 border border-amber-500/30 rounded-xl pr-11 pl-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-amber-500 transition-all shadow-inner">
-        </div>
+    <div class="relative mb-4">
+      <i class="fa-solid fa-magnifying-glass absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500"></i>
+      <input type="text" id="searchInput" oninput="filterMenu()" placeholder="ابحث عن صنف أو طاجن..." 
+        class="w-full bg-neutral-900 border border-neutral-800 rounded-xl py-2.5 pr-10 pl-4 text-sm focus:outline-none focus:border-amber-500 text-white placeholder-neutral-500">
     </div>
 
-    <!-- Main Content Menu Grid -->
-    <main class="max-w-4xl mx-auto px-4 py-6 relative z-10">
-        <div id="menu-container" class="space-y-8">
-            <!-- Menu Sections & Items rendered dynamically by JS -->
-        </div>
-    </main>
+    <!-- Category Tabs -->
+    <div id="categoryTabs" class="flex gap-2 overflow-x-auto no-scrollbar pb-3 mb-4 text-sm font-bold">
+      <!-- Dynamic Categories -->
+    </div>
 
-    <!-- Floating Order Summary Bar (Sticky Bottom) -->
-    <div id="floating-cart-bar" class="fixed bottom-0 left-0 right-0 z-30 bg-zinc-900/95 border-t border-amber-500/40 p-4 shadow-2xl backdrop-blur-lg transform translate-y-full transition-transform duration-300">
-        <div class="max-w-4xl mx-auto flex items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-                <div class="relative">
-                    <button onclick="openCartModal()" class="w-12 h-12 rounded-xl bg-amber-500 text-black flex items-center justify-center font-bold text-xl shadow-lg shadow-amber-500/30">
-                        <i class="fa-solid fa-cart-shopping"></i>
-                    </button>
-                    <span id="cart-badge" class="absolute -top-2 -right-2 bg-red-600 text-white text-xs w-6 h-6 rounded-full flex items-center justify-center font-black border-2 border-zinc-900">0</span>
-                </div>
-                <div>
-                    <p class="text-xs text-gray-400">إجمالي الطلب</p>
-                    <p class="text-xl font-black text-amber-400"><span id="cart-total-price">0</span> <span class="text-xs">ج.م</span></p>
-                </div>
+    <!-- Menu Items List -->
+    <div id="menuContainer" class="space-y-6">
+      <!-- Dynamic Items -->
+    </div>
+  </main>
+
+  <!-- Sticky Bottom Cart Bar -->
+  <div id="cartBar" class="fixed bottom-0 left-0 right-0 z-40 bg-neutral-900/95 border-t border-neutral-800 backdrop-blur-lg p-4 transform translate-y-full transition-transform duration-300">
+    <div class="max-w-md mx-auto flex items-center justify-between gap-4">
+      <div>
+        <div class="text-xs text-neutral-400">الإجمالي المحدد</div>
+        <div class="text-xl font-black text-amber-500"><span id="cartTotal">0</span> ج.م</div>
+      </div>
+      <button onclick="openCheckoutModal()" class="flex-1 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg shadow-red-900/30 flex items-center justify-center gap-2">
+        <span>استكمال الطلب</span>
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Checkout Modal -->
+  <div id="checkoutModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="bg-neutral-900 border border-neutral-800 w-full max-w-md rounded-t-3xl sm:rounded-2xl p-5 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center mb-4 pb-2 border-b border-neutral-800">
+        <h3 class="font-bold text-lg text-white flex items-center gap-2">
+          <i class="fa-solid fa-bag-shopping text-amber-500"></i> تفاصيل الطلب والتوصيل
+        </h3>
+        <button onclick="closeCheckoutModal()" class="text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <!-- Order Items Summary -->
+      <div id="orderSummary" class="bg-neutral-950 p-3 rounded-xl mb-4 space-y-2 text-sm border border-neutral-800"></div>
+
+      <!-- Promo Code Section -->
+      <div class="mb-4">
+        <label class="block text-xs font-bold text-neutral-400 mb-1">كود الخصم (إن وجد)</label>
+        <div class="flex gap-2">
+          <input type="text" id="promoCodeInput" placeholder="أدخل كود الخصم" class="uppercase flex-1 bg-black border border-neutral-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
+          <button onclick="applyPromoCode()" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-4 py-2 rounded-xl text-sm transition">تطبيق</button>
+        </div>
+        <div id="promoMessage" class="text-xs mt-1 font-bold"></div>
+      </div>
+
+      <!-- Pricing Breakdown -->
+      <div class="bg-neutral-950/60 p-3 rounded-xl mb-4 text-xs space-y-1.5 border border-neutral-800/50">
+        <div class="flex justify-between text-neutral-400">
+          <span>المجموع الفرعي:</span>
+          <span><span id="subTotal">0</span> ج.م</span>
+        </div>
+        <div class="flex justify-between text-emerald-400">
+          <span>الخصم:</span>
+          <span>-<span id="discountAmount">0</span> ج.م</span>
+        </div>
+        <div class="flex justify-between text-base font-black text-white pt-2 border-t border-neutral-800">
+          <span>الإجمالي النهائي:</span>
+          <span class="text-amber-500"><span id="finalTotal">0</span> ج.م</span>
+        </div>
+      </div>
+
+      <!-- Customer Form -->
+      <form id="orderForm" onsubmit="sendOrderToWhatsApp(event)" class="space-y-3">
+        <div>
+          <label class="block text-xs font-bold text-neutral-400 mb-1">الاسم بالكامل *</label>
+          <input type="text" id="custName" required placeholder="أدخل اسمك" class="w-full bg-black border border-neutral-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-neutral-400 mb-1">رقم الهاتف *</label>
+          <input type="tel" id="custPhone" required placeholder="01xxxxxxxxx" class="w-full bg-black border border-neutral-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-neutral-400 mb-1">عنوان التوصيل بالتفصيل *</label>
+          <textarea id="custAddress" required rows="2" placeholder="المنطقة - الشارع - رقم العمارة - الشقة" class="w-full bg-black border border-neutral-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500"></textarea>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-neutral-400 mb-1">ملاحظات إضافية (اختياري)</label>
+          <input type="text" id="custNotes" placeholder="مثال: بدون بصل / زيادة طحينة" class="w-full bg-black border border-neutral-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
+        </div>
+
+        <button type="submit" class="w-full mt-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl shadow-lg flex items-center justify-center gap-2 text-base transition">
+          <i class="fa-brands fa-whatsapp text-xl"></i>
+          <span>إرسال الطلب عبر الواتساب</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin Password Modal -->
+  <div id="adminAuthModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-neutral-900 border border-neutral-800 w-full max-w-xs rounded-2xl p-5 text-center">
+      <i class="fa-solid fa-lock text-3xl text-amber-500 mb-2"></i>
+      <h3 class="font-bold text-white mb-1">لوحة تحكم الإدارة</h3>
+      <p class="text-xs text-neutral-400 mb-4">أدخل كلمة السر للدخول</p>
+      <input type="password" id="adminPassInput" placeholder="كلمة السر" class="w-full bg-black border border-neutral-800 rounded-xl px-3 py-2 text-center text-sm text-white mb-3 focus:outline-none focus:border-amber-500">
+      <div class="flex gap-2">
+        <button onclick="checkAdminPassword()" class="flex-1 bg-amber-600 text-white font-bold py-2 rounded-xl text-sm">دخول</button>
+        <button onclick="closeAdminAuthModal()" class="flex-1 bg-neutral-800 text-gray-300 font-bold py-2 rounded-xl text-sm">إلغاء</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Panel Modal -->
+  <div id="adminPanelModal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-md hidden flex flex-col">
+    <!-- Admin Header -->
+    <div class="bg-neutral-900 border-b border-neutral-800 p-4 flex justify-between items-center">
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-sliders text-amber-500"></i>
+        <h2 class="font-bold text-white">لوحة تحكم المنيو</h2>
+      </div>
+      <button onclick="closeAdminPanelModal()" class="text-neutral-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <!-- Admin Content Tabs -->
+    <div class="p-4 flex-1 overflow-y-auto max-w-md mx-auto w-full space-y-6">
+      
+      <!-- Add New Item Section -->
+      <div class="bg-neutral-900 border border-neutral-800 p-4 rounded-xl space-y-3">
+        <h4 class="font-bold text-sm text-amber-500 flex items-center gap-2">
+          <i class="fa-solid fa-plus"></i> إضافة صنف جديد للمنيو
+        </h4>
+        <input type="text" id="newItemName" placeholder="اسم الصنف" class="w-full bg-black border border-neutral-800 rounded-xl px-3 py-2 text-sm text-white">
+        <div class="flex gap-2">
+          <input type="number" id="newItemPrice" placeholder="السعر (ج.م)" class="w-1/2 bg-black border border-neutral-800 rounded-xl px-3 py-2 text-sm text-white">
+          <select id="newItemCat" class="w-1/2 bg-black border border-neutral-800 rounded-xl px-3 py-2 text-sm text-white">
+            <!-- Dynamic Category Options -->
+          </select>
+        </div>
+        <button onclick="addNewMenuItem()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-xl text-sm">إضافة الصنف</button>
+      </div>
+
+      <!-- Add New Promo Code -->
+      <div class="bg-neutral-900 border border-neutral-800 p-4 rounded-xl space-y-3">
+        <h4 class="font-bold text-sm text-amber-500 flex items-center gap-2">
+          <i class="fa-solid fa-ticket"></i> إضافة كود خصم جديد
+        </h4>
+        <div class="flex gap-2">
+          <input type="text" id="newPromoCode" placeholder="الكود (مثال: SALE10)" class="uppercase w-1/2 bg-black border border-neutral-800 rounded-xl px-3 py-2 text-sm text-white">
+          <input type="number" id="newPromoPercent" placeholder="نسبة الخصم %" class="w-1/2 bg-black border border-neutral-800 rounded-xl px-3 py-2 text-sm text-white">
+        </div>
+        <button onclick="addNewPromoCode()" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-2 rounded-xl text-sm">تفعيل الكود</button>
+      </div>
+
+      <!-- Edit Items List -->
+      <div class="bg-neutral-900 border border-neutral-800 p-4 rounded-xl space-y-3">
+        <h4 class="font-bold text-sm text-amber-500 flex items-center gap-2">
+          <i class="fa-solid fa-list-check"></i> تعديل الأصناف والأسعار والإخفاء
+        </h4>
+        <div id="adminItemsList" class="space-y-2 max-h-80 overflow-y-auto pr-1">
+          <!-- Dynamic Admin Items -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Initial Menu Data
+    const defaultCategories = ["الطواجن الرئيسية", "المكرونات", "طواجن موتزريلا", "الفته", "الوجبات", "وجبات الميكس", "المحشي", "المشويات الرئيسية", "حواوشي كبير ع الفحم"];
+    
+    const defaultMenu = [
+      { id: 1, name: "طاجن كوارع ورق عنب", price: 300, cat: "الطواجن الرئيسية", available: true },
+      { id: 2, name: "طاجن كوارع", price: 250, cat: "الطواجن الرئيسية", available: true },
+      { id: 3, name: "طاجن كباب", price: 350, cat: "الطواجن الرئيسية", available: true },
+      { id: 4, name: "طاجن لحمه بلدي", price: 350, cat: "الطواجن الرئيسية", available: true },
+      { id: 5, name: "طاجن ملوخيه بالحمه", price: 400, cat: "الطواجن الرئيسية", available: true },
+      { id: 6, name: "طاجن ملوخيه ساده", price: 125, cat: "الطواجن الرئيسية", available: true },
+      { id: 7, name: "طاجن باميه بالحمه", price: 350, cat: "الطواجن الرئيسية", available: true },
+      { id: 8, name: "طاجن لسان عصفور بالحمه", price: 250, cat: "الطواجن الرئيسية", available: true },
+      { id: 9, name: "طاجن لسان عصفور ساده", price: 125, cat: "الطواجن الرئيسية", available: true },
+
+      { id: 10, name: "مكرونه مع بانيه", price: 125, cat: "المكرونات", available: true },
+      { id: 11, name: "مكرونه مع شيش طاوق", price: 125, cat: "المكرونات", available: true },
+      { id: 12, name: "مكرونه مع كفته", price: 125, cat: "المكرونات", available: true },
+      { id: 13, name: "مكرونه مع نص فرخه", price: 215, cat: "المكرونات", available: true },
+      { id: 14, name: "مكرونه مع سجق", price: 125, cat: "المكرونات", available: true },
+      { id: 15, name: "مكرونه مع شاورما", price: 160, cat: "المكرونات", available: true },
+      { id: 16, name: "مكرونه مع كبده وقوانص", price: 125, cat: "المكرونات", available: true },
+
+      { id: 17, name: "طاجن لحمه موتزريلا", price: 160, cat: "طواجن موتزريلا", available: true },
+      { id: 18, name: "طاجن كفته موتزريلا", price: 160, cat: "طواجن موتزريلا", available: true },
+      { id: 19, name: "طاجن سجق موتزريلا", price: 130, cat: "طواجن موتزريلا", available: true },
+      { id: 20, name: "طاجن شيش طاوق موتزريلا", price: 160, cat: "طواجن موتزريلا", available: true },
+      { id: 21, name: "طاجن شاورما لحمه موتزريلا", price: 170, cat: "طواجن موتزريلا", available: true },
+      { id: 22, name: "طاجن شاورما فراخ موتزريلا", price: 150, cat: "طواجن موتزريلا", available: true },
+
+      { id: 23, name: "فتة لحمه", price: 310, cat: "الفته", available: true },
+      { id: 24, name: "فتة لحمه محمره", price: 330, cat: "الفته", available: true },
+      { id: 25, name: "فته شاورما لحمه", price: 300, cat: "الفته", available: true },
+      { id: 26, name: "فته شاورما فراخ", price: 250, cat: "الفته", available: true },
+      { id: 27, name: "فتة كوارع", price: 300, cat: "الفته", available: true },
+      { id: 28, name: "فته ساده", price: 125, cat: "الفته", available: true },
+
+      { id: 29, name: "وجبة كفته", price: 180, cat: "الوجبات", available: true },
+      { id: 30, name: "وجبة نص فرخه", price: 190, cat: "الوجبات", available: true },
+      { id: 31, name: "وجبة ربع فرخه", price: 125, cat: "الوجبات", available: true },
+      { id: 32, name: "وجبة شيش طاوق", price: 160, cat: "الوجبات", available: true },
+      { id: 33, name: "وجبة لحمه بسمتي", price: 190, cat: "الوجبات", available: true },
+      { id: 34, name: "وجبة ميكس فحم", price: 400, cat: "الوجبات", available: true },
+      { id: 35, name: "وجبة ميكس جريل", price: 350, cat: "الوجبات", available: true },
+      { id: 36, name: "وجبة ارز بالكبده وقوانص", price: 140, cat: "الوجبات", available: true },
+
+      { id: 37, name: "وجبة نص فرخه مع كفته", price: 320, cat: "وجبات الميكس", available: true },
+      { id: 38, name: "وجبة ربع فرخه مع كفته", price: 250, cat: "وجبات الميكس", available: true },
+      { id: 39, name: "وجبة شيش طاوق مع كفته", price: 250, cat: "وجبات الميكس", available: true },
+
+      { id: 40, name: "وجبة ورق عنب مع بانيه", price: 280, cat: "المحشي", available: true },
+      { id: 41, name: "وجبة كرنب مع بانيه", price: 250, cat: "المحشي", available: true },
+      { id: 42, name: "ورق عنب مع شيش طاوق", price: 270, cat: "المحشي", available: true },
+      { id: 43, name: "كرنب مع شيش طاوق", price: 240, cat: "المحشي", available: true },
+      { id: 44, name: "ورق عنب مع كفته", price: 290, cat: "المحشي", available: true },
+      { id: 45, name: "كرنب مع كفته", price: 270, cat: "المحشي", available: true },
+      { id: 46, name: "ورق عنب مع نص فرخه", price: 330, cat: "المحشي", available: true },
+      { id: 47, name: "كرنب مع نص فرخه", price: 310, cat: "المحشي", available: true },
+
+      { id: 48, name: "دجاجه كامله", price: 650, cat: "المشويات الرئيسية", available: true },
+      { id: 49, name: "دجاج شيش", price: 600, cat: "المشويات الرئيسية", available: true },
+      { id: 50, name: "نص كفته ضاني", price: 480, cat: "المشويات الرئيسية", available: true },
+      { id: 51, name: "نص كفته كندوز", price: 410, cat: "المشويات الرئيسية", available: true },
+      { id: 52, name: "نص كفته بلدي", price: 450, cat: "المشويات الرئيسية", available: true },
+      { id: 53, name: "نص شيش", price: 320, cat: "المشويات الرئيسية", available: true },
+      { id: 54, name: "نص بانيه", price: 350, cat: "المشويات الرئيسية", available: true },
+      { id: 55, name: "نص كفته وطرب", price: 500, cat: "المشويات الرئيسية", available: true },
+      { id: 56, name: "نص ميكس فحم", price: 650, cat: "المشويات الرئيسية", available: true },
+      { id: 57, name: "نص ميكس جريل", price: 500, cat: "المشويات الرئيسية", available: true },
+
+      { id: 58, name: "حواوشي كبير ع الفحم", price: 120, cat: "حواوشي كبير ع الفحم", available: true },
+      { id: 59, name: "حواوشي متزريلا كبير ع الفحم", price: 140, cat: "حواوشي كبير ع الفحم", available: true },
+      { id: 60, name: "حواوشي ميكس جبن كبير ع الفحم", price: 160, cat: "حواوشي كبير ع الفحم", available: true },
+      { id: 61, name: "حواوشي بسطرمه كبير ع الفحم", price: 170, cat: "حواوشي كبير ع الفحم", available: true },
+      { id: 62, name: "حواوشي سجق كبير ع الفحم", price: 170, cat: "حواوشي كبير ع الفحم", available: true },
+      { id: 63, name: "حواوشي طرب كبير ع الفحم", price: 190, cat: "حواوشي كبير ع الفحم", available: true }
+    ];
+
+    let menuItems = JSON.parse(localStorage.getItem('alfahm_menu')) || defaultMenu;
+    let promoCodes = JSON.parse(localStorage.getItem('alfahm_promos')) || { 'OFF10': 10, 'WELCOME': 15 };
+    let adminPass = localStorage.getItem('alfahm_pass') || '1234';
+
+    let cart = {};
+    let activeCategory = defaultCategories[0];
+    let appliedDiscount = 0;
+    let secretClicks = 0;
+
+    // Initialize App
+    function initApp() {
+      renderCategories();
+      renderMenuItems();
+      renderAdminCategoryOptions();
+    }
+
+    // Render Categories
+    function renderCategories() {
+      const tabs = document.getElementById('categoryTabs');
+      tabs.innerHTML = defaultCategories.map(cat => `
+        <button onclick="selectCategory('${cat}')" class="px-4 py-2 rounded-xl whitespace-nowrap transition border ${activeCategory === cat ? 'bg-amber-600 border-amber-500 text-white' : 'bg-neutral-900 border-neutral-800 text-neutral-400 hover:text-white'}">
+          ${cat}
+        </button>
+      `).join('');
+    }
+
+    function selectCategory(cat) {
+      activeCategory = cat;
+      renderCategories();
+      renderMenuItems();
+    }
+
+    // Render Menu Items
+    function renderMenuItems() {
+      const container = document.getElementById('menuContainer');
+      const searchVal = document.getElementById('searchInput').value.trim().toLowerCase();
+
+      let filtered = menuItems.filter(item => {
+        const matchesCat = searchVal ? true : item.cat === activeCategory;
+        const matchesSearch = item.name.toLowerCase().includes(searchVal);
+        return matchesCat && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="text-center text-neutral-500 py-8">لا توجد نتائج متطابقة</div>`;
+        return;
+      }
+
+      container.innerHTML = filtered.map(item => {
+        const qty = cart[item.id] || 0;
+        const isOutOfStock = !item.available;
+
+        return `
+          <div class="bg-neutral-900 border border-neutral-800/80 rounded-2xl p-4 flex justify-between items-center ${isOutOfStock ? 'opacity-50' : ''}">
+            <div class="space-y-1">
+              <div class="font-bold text-white text-base flex items-center gap-2">
+                ${item.name}
+                ${isOutOfStock ? '<span class="text-xs bg-red-950 text-red-500 px-2 py-0.5 rounded border border-red-800">غير متوفر</span>' : ''}
+              </div>
+              <div class="text-amber-500 font-extrabold text-sm">${item.price} ج.م</div>
             </div>
 
-            <button onclick="openCheckoutModal()" class="flex-1 sm:flex-none bg-gradient-to-r from-emerald-600 to-green-500 hover:from-emerald-500 hover:to-green-400 text-white font-bold py-3 px-6 rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all">
-                <span>تأكيد الطلب عبر الواتساب</span>
-                <i class="fa-brands fa-whatsapp text-xl"></i>
-            </button>
+            ${isOutOfStock ? '' : `
+              <div class="flex items-center gap-3 bg-black border border-neutral-800 rounded-xl p-1">
+                ${qty > 0 ? `
+                  <button onclick="updateQty(${item.id}, -1)" class="w-8 h-8 rounded-lg bg-neutral-800 text-amber-500 font-bold flex items-center justify-center hover:bg-neutral-700">-</button>
+                  <span class="font-bold text-sm text-white px-1">${qty}</span>
+                ` : ''}
+                <button onclick="updateQty(${item.id}, 1)" class="w-8 h-8 rounded-lg bg-amber-600 text-white font-bold flex items-center justify-center hover:bg-amber-500">+</button>
+              </div>
+            `}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterMenu() {
+      renderMenuItems();
+    }
+
+    // Cart Operations
+    function updateQty(id, change) {
+      if (!cart[id]) cart[id] = 0;
+      cart[id] += change;
+      if (cart[id] <= 0) delete cart[id];
+
+      renderMenuItems();
+      updateCartBar();
+    }
+
+    function updateCartBar() {
+      const cartBar = document.getElementById('cartBar');
+      let total = 0;
+      let count = 0;
+
+      for (let id in cart) {
+        let item = menuItems.find(i => i.id == id);
+        if (item) {
+          total += item.price * cart[id];
+          count += cart[id];
+        }
+      }
+
+      document.getElementById('cartTotal').innerText = total;
+
+      if (count > 0) {
+        cartBar.classList.remove('translate-y-full');
+      } else {
+        cartBar.classList.add('translate-y-full');
+      }
+    }
+
+    // Checkout Modal
+    function openCheckoutModal() {
+      const summary = document.getElementById('orderSummary');
+      let subtotal = 0;
+
+      summary.innerHTML = Object.keys(cart).map(id => {
+        let item = menuItems.find(i => i.id == id);
+        let itemTotal = item.price * cart[id];
+        subtotal += itemTotal;
+        return `
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-white font-bold">${item.name} × ${cart[id]}</span>
+            <span class="text-amber-500 font-bold">${itemTotal} ج.م</span>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('subTotal').innerText = subtotal;
+      appliedDiscount = 0;
+      document.getElementById('discountAmount').innerText = 0;
+      document.getElementById('finalTotal').innerText = subtotal;
+      document.getElementById('promoMessage').innerText = '';
+      document.getElementById('promoCodeInput').value = '';
+
+      document.getElementById('checkoutModal').classList.remove('hidden');
+    }
+
+    function closeCheckoutModal() {
+      document.getElementById('checkoutModal').classList.add('hidden');
+    }
+
+    // Apply Promo Code
+    function applyPromoCode() {
+      const code = document.getElementById('promoCodeInput').value.trim().toUpperCase();
+      const msg = document.getElementById('promoMessage');
+      const subtotal = parseFloat(document.getElementById('subTotal').innerText);
+
+      if (promoCodes[code]) {
+        let percent = promoCodes[code];
+        appliedDiscount = (subtotal * percent) / 100;
+        let final = subtotal - appliedDiscount;
+
+        document.getElementById('discountAmount').innerText = appliedDiscount.toFixed(1);
+        document.getElementById('finalTotal').innerText = final.toFixed(1);
+
+        msg.className = "text-xs mt-1 font-bold text-emerald-400";
+        msg.innerText = `تم تطبيق خصم ${percent}% بنجاح!`;
+      } else {
+        msg.className = "text-xs mt-1 font-bold text-red-400";
+        msg.innerText = "كود الخصم غير صحيح أو منتهي الصلاحية";
+      }
+    }
+
+    // Send to WhatsApp
+    function sendOrderToWhatsApp(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('custName').value.trim();
+      const phone = document.getElementById('custPhone').value.trim();
+      const address = document.getElementById('custAddress').value.trim();
+      const notes = document.getElementById('custNotes').value.trim();
+
+      let subtotal = parseFloat(document.getElementById('subTotal').innerText);
+      let finalTotal = parseFloat(document.getElementById('finalTotal').innerText);
+
+      let msg = `طلب جديد من مطعم *ع الفحم* 🔥\n\n`;
+      msg += `*العميل:* ${name}\n`;
+      msg += `*الهاتف:* ${phone}\n`;
+      msg += `*العنوان:* ${address}\n`;
+      if (notes) msg += `*ملاحظات:* ${notes}\n`;
+      msg += `\n*الأصناف المطلوبة:*\n`;
+
+      for (let id in cart) {
+        let item = menuItems.find(i => i.id == id);
+        msg += `- ${item.name} (عدد ${cart[id]}) = ${item.price * cart[id]} ج.م\n`;
+      }
+
+      msg += `\n*المجموع الفرعي:* ${subtotal} ج.م`;
+      if (appliedDiscount > 0) {
+        msg += `\n*الخصم:* -${appliedDiscount.toFixed(1)} ج.م`;
+      }
+      msg += `\n*الإجمالي النهائي:* ${finalTotal.toFixed(1)} ج.م\n`;
+
+      const whatsappNum = "201121126633";
+      const url = `https://wa.me/${whatsappNum}?text=${encodeURIComponent(msg)}`;
+      window.open(url, '_blank');
+    }
+
+    // Admin Control Panel Logic
+    function handleSecretClick() {
+      secretClicks++;
+      if (secretClicks >= 5) {
+        secretClicks = 0;
+        openAdminModal();
+      }
+    }
+
+    function openAdminModal() {
+      document.getElementById('adminAuthModal').classList.remove('hidden');
+    }
+
+    function closeAdminAuthModal() {
+      document.getElementById('adminAuthModal').classList.add('hidden');
+    }
+
+    function checkAdminPassword() {
+      const input = document.getElementById('adminPassInput').value;
+      if (input === adminPass) {
+        closeAdminAuthModal();
+        openAdminPanel();
+      } else {
+        alert('كلمة السر غير صحيحة!');
+      }
+    }
+
+    function openAdminPanel() {
+      renderAdminItems();
+      document.getElementById('adminPanelModal').classList.remove('hidden');
+    }
+
+    function closeAdminPanelModal() {
+      document.getElementById('adminPanelModal').classList.add('hidden');
+    }
+
+    function renderAdminCategoryOptions() {
+      const sel = document.getElementById('newItemCat');
+      sel.innerHTML = defaultCategories.map(c => `<option value="${c}">${c}</option>`).join('');
+    }
+
+    function renderAdminItems() {
+      const list = document.getElementById('adminItemsList');
+      list.innerHTML = menuItems.map(item => `
+        <div class="flex items-center justify-between bg-black p-2 rounded-lg border border-neutral-800 text-xs gap-2">
+          <span class="text-white font-bold flex-1 truncate">${item.name}</span>
+          <input type="number" value="${item.price}" onchange="updateItemPrice(${item.id}, this.value)" class="w-16 bg-neutral-900 border border-neutral-700 rounded px-1.5 py-1 text-center text-amber-500 font-bold">
+          <button onclick="toggleItemStock(${item.id})" class="px-2 py-1 rounded font-bold ${item.available ? 'bg-emerald-900 text-emerald-400 border border-emerald-700' : 'bg-red-900 text-red-400 border border-red-700'}">
+            ${item.available ? 'متاح' : 'مغلق'}
+          </button>
         </div>
-    </div>
+      `).join('');
+    }
 
-    <!-- Checkout Modal -->
-    <div id="checkout-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
-        <div class="bg-zinc-900 border border-amber-500/40 rounded-2xl w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto relative shadow-2xl">
-            <button onclick="closeCheckoutModal()" class="absolute left-4 top-4 text-gray-400 hover:text-white text-xl">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
+    function updateItemPrice(id, newPrice) {
+      let item = menuItems.find(i => i.id == id);
+      if (item) {
+        item.price = parseFloat(newPrice) || item.price;
+        saveAndSync();
+      }
+    }
 
-            <h3 class="text-xl font-black text-amber-500 mb-2 flex items-center gap-2">
-                <i class="fa-solid fa-clipboard-list"></i>
-                <span>بيانات التوصيل والطلب</span>
-            </h3>
-            <p class="text-xs text-gray-400 mb-6">يرجى إدخال بياناتك لإرسال الأوردر فوراً عبر الواتساب</p>
+    function toggleItemStock(id) {
+      let item = menuItems.find(i => i.id == id);
+      if (item) {
+        item.available = !item.available;
+        saveAndSync();
+        renderAdminItems();
+      }
+    }
 
-            <!-- Order Items Summary List inside modal -->
-            <div class="mb-6 border-b border-zinc-800 pb-4">
-                <h4 class="text-sm font-bold text-gray-300 mb-2">ملخص الأصناف:</h4>
-                <div id="modal-cart-items" class="space-y-2 max-h-36 overflow-y-auto pr-1">
-                    <!-- Dynamic cart list -->
-                </div>
-                <div class="flex justify-between items-center mt-3 pt-2 border-t border-zinc-800 font-bold">
-                    <span class="text-gray-300">الإجمالي النهائي:</span>
-                    <span class="text-amber-400 text-lg"><span id="modal-cart-total">0</span> ج.م</span>
-                </div>
-            </div>
+    function addNewMenuItem() {
+      const name = document.getElementById('newItemName').value.trim();
+      const price = parseFloat(document.getElementById('newItemPrice').value);
+      const cat = document.getElementById('newItemCat').value;
 
-            <form id="order-form" onsubmit="sendWhatsAppOrder(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-gray-300 mb-1">الاسم بالكامل *</label>
-                    <input type="text" id="customer-name" required placeholder="أدخل اسمك الكريم" class="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-gray-300 mb-1">رقم الهاتف *</label>
-                    <input type="tel" id="customer-phone" required placeholder="مثال: 01012345678" class="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-gray-300 mb-1">العنوان بالتفصيل *</label>
-                    <textarea id="customer-address" required rows="2" placeholder="المنطقة / الشارع / رقم العمارة / الشقة" class="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500"></textarea>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-gray-300 mb-1">ملاحظات إضافية (إختياري)</label>
-                    <input type="text" id="customer-notes" placeholder="أي إضافات أو تعليمات للطلب" class="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500">
-                </div>
-
-                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-3 rounded-xl shadow-lg flex items-center justify-center gap-2 mt-4 text-base transition-all">
-                    <i class="fa-brands fa-whatsapp text-2xl"></i>
-                    <span>إرسال الطلب عبر الواتساب</span>
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Script Data and Application Logic -->
-    <script>
-        // Menu Data Structure from User Prompt
-        const menuData = [
-            {
-                category: "الطواجن الرئيسية",
-                icon: "fa-dumpster-fire",
-                items: [
-                    { id: 1, name: "طاجن كوارع ورق عنب", price: 300 },
-                    { id: 2, name: "طاجن كوارع", price: 250 },
-                    { id: 3, name: "طاجن كباب", price: 350 },
-                    { id: 4, name: "طاجن لحمه بلدي", price: 350 },
-                    { id: 5, name: "طاجن ملوخيه بالحمه", price: 400 },
-                    { id: 6, name: "طاجن ملوخيه ساده", price: 125 },
-                    { id: 7, name: "طاجن باميه بالحمه", price: 350 },
-                    { id: 8, name: "طاجن لسان عصفور بالحمه", price: 250 },
-                    { id: 9, name: "طاجن لسان عصفور ساده", price: 125 }
-                ]
-            },
-            {
-                category: "المكرونات",
-                icon: "fa-bowl-food",
-                items: [
-                    { id: 10, name: "مكرونه مع بانيه", price: 125 },
-                    { id: 11, name: "مكرونه مع شيش طاووق", price: 125 },
-                    { id: 12, name: "مكرونه مع كفته", price: 125 },
-                    { id: 13, name: "مكرونه مع نص فرخه", price: 215 },
-                    { id: 14, name: "مكرونه مع سجق", price: 125 },
-                    { id: 15, name: "مكرونه مع شاورما", price: 160 },
-                    { id: 16, name: "مكرونه مع كبده وقوانص", price: 125 }
-                ]
-            },
-            {
-                category: "طواجن موتزريلا",
-                icon: "fa-cheese",
-                items: [
-                    { id: 17, name: "طاجن لحمه موتزريلا", price: 160 },
-                    { id: 18, name: "طاجن كفته موتزريلا", price: 160 },
-                    { id: 19, name: "طاجن سجق موتزريلا", price: 130 },
-                    { id: 20, name: "طاجن شيش طاووق موتزريلا", price: 160 },
-                    { id: 21, name: "طاجن شاورما لحمه موتزريلا", price: 170 },
-                    { id: 22, name: "طاجن شاورما فراخ موتزريلا", price: 150 }
-                ]
-            },
-            {
-                category: "الفته",
-                icon: "fa-plate-wheat",
-                items: [
-                    { id: 23, name: "فتة لحمه", price: 310 },
-                    { id: 24, name: "فتة لحمه محمره", price: 330 },
-                    { id: 25, name: "فته شاورما لحمه", price: 300 },
-                    { id: 26, name: "فته شاورما فراخ", price: 250 },
-                    { id: 27, name: "فتة كوارع", price: 300 },
-                    { id: 28, name: "فته ساده", price: 125 }
-                ]
-            },
-            {
-                category: "الوجبات",
-                icon: "fa-utensils",
-                items: [
-                    { id: 29, name: "وجبة كفته", price: 180 },
-                    { id: 30, name: "وجبة نص فرخه", price: 190 },
-                    { id: 31, name: "وجبة ربع فرخه", price: 125 },
-                    { id: 32, name: "وجبة شيش طاووق", price: 160 },
-                    { id: 33, name: "وجبة لحمه بسمتي", price: 190 },
-                    { id: 34, name: "وجبة ميكس فحم", price: 400 },
-                    { id: 35, name: "وجبة ميكس جريل", price: 350 },
-                    { id: 36, name: "وجبة ارز بالكبده وقوانص", price: 140 }
-                ]
-            },
-            {
-                category: "وجبات الميكس",
-                icon: "fa-drumstick-bite",
-                items: [
-                    { id: 37, name: "وجبة نص فرخه مع كفته", price: 320 },
-                    { id: 38, name: "وجبة ربع فرخه مع كفته", price: 250 },
-                    { id: 39, name: "وجبة شيش طاووق مع كفته", price: 250 }
-                ]
-            },
-            {
-                category: "المحشي",
-                icon: "fa-seedling",
-                items: [
-                    { id: 40, name: "وجبة ورق عنب مع بانيه", price: 280 },
-                    { id: 41, name: "وجبة كرنب مع بانيه", price: 250 },
-                    { id: 42, name: "ورق عنب مع شيش طاووق", price: 270 },
-                    { id: 43, name: "كرنب مع شيش طاووق", price: 240 },
-                    { id: 44, name: "ورق عنب مع كفته", price: 290 },
-                    { id: 45, name: "كرنب مع كفته", price: 270 },
-                    { id: 46, name: "ورق عنب مع نص فرخه", price: 330 },
-                    { id: 47, name: "كرنب مع نص فرخه", price: 310 }
-                ]
-            },
-            {
-                category: "المشويات الرئيسية",
-                icon: "fa-fire-burner",
-                items: [
-                    { id: 48, name: "دجاجه كامله", price: 650 },
-                    { id: 49, name: "دجاج شيش", price: 600 },
-                    { id: 50, name: "نص كفته ضاني", price: 480 },
-                    { id: 51, name: "نص كفته كندوز", price: 410 },
-                    { id: 52, name: "نص كفته بلدي", price: 450 },
-                    { id: 53, name: "نص شيش", price: 320 },
-                    { id: 54, name: "نص بانيه", price: 350 },
-                    { id: 55, name: "نص كفته وطرب", price: 500 },
-                    { id: 56, name: "نص ميكس فحم", price: 650 },
-                    { id: 57, name: "نص ميكس جريل", price: 500 }
-                ]
-            },
-            {
-                category: "حواوشي كبير ع الفحم",
-                icon: "fa-burger",
-                items: [
-                    { id: 58, name: "حواوشي كبير ع الفحم", price: 120 },
-                    { id: 59, name: "حواوشي متزريلا كبير ع الفحم", price: 140 },
-                    { id: 60, name: "حواوشي ميكس جبن كبير ع الفحم", price: 160 },
-                    { id: 61, name: "حواوشي بسطرمه كبير ع الفحم", price: 170 },
-                    { id: 62, name: "حواوشي سجق كبير ع الفحم", price: 170 },
-                    { id: 63, name: "حواوشي طرب كبير ع الفحم", price: 190 }
-                ]
-            }
-        ];
-
-        // Cart State
-        let cart = {};
-
-        // Target WhatsApp Number
-        const whatsappNumber = "201121126633"; // Egyptian format without +
-
-        // Initialize App
-        window.onload = function() {
-            renderTabs();
-            renderMenu(menuData);
+      if (name && price) {
+        const newItem = {
+          id: Date.now(),
+          name: name,
+          price: price,
+          cat: cat,
+          available: true
         };
+        menuItems.push(newItem);
+        saveAndSync();
+        renderAdminItems();
+        document.getElementById('newItemName').value = '';
+        document.getElementById('newItemPrice').value = '';
+        alert('تمت إضافة الصنف بنجاح!');
+      } else {
+        alert('برجاء كتابة الاسم والسعر!');
+      }
+    }
 
-        // Render Tabs
-        function renderTabs() {
-            const tabsContainer = document.getElementById('categories-tabs');
-            let html = `<button onclick="scrollToCategory('all')" class="category-tab bg-amber-500 text-black px-4 py-2 rounded-xl text-xs font-bold border border-amber-500 transition-all">الكل</button>`;
-            
-            menuData.forEach((cat, index) => {
-                html += `
-                    <button onclick="scrollToCategory('cat-${index}')" class="category-tab bg-zinc-900 text-gray-300 hover:text-amber-400 px-4 py-2 rounded-xl text-xs font-bold border border-zinc-800 transition-all flex items-center gap-2">
-                        <i class="fa-solid ${cat.icon} text-amber-500"></i>
-                        <span>${cat.category}</span>
-                    </button>
-                `;
-            });
-            tabsContainer.innerHTML = html;
-        }
+    function addNewPromoCode() {
+      const code = document.getElementById('newPromoCode').value.trim().toUpperCase();
+      const percent = parseFloat(document.getElementById('newPromoPercent').value);
 
-        // Render Menu Items
-        function renderMenu(data) {
-            const container = document.getElementById('menu-container');
-            container.innerHTML = '';
+      if (code && percent) {
+        promoCodes[code] = percent;
+        localStorage.setItem('alfahm_promos', JSON.stringify(promoCodes));
+        document.getElementById('newPromoCode').value = '';
+        document.getElementById('newPromoPercent').value = '';
+        alert(`تم تفعيل كود الخصم ${code} بنسبة ${percent}% بنجاح!`);
+      }
+    }
 
-            data.forEach((cat, catIndex) => {
-                if (cat.items.length === 0) return;
+    function saveAndSync() {
+      localStorage.setItem('alfahm_menu', JSON.stringify(menuItems));
+      renderMenuItems();
+    }
 
-                const section = document.createElement('section');
-                section.id = `cat-${catIndex}`;
-                section.className = "scroll-mt-36";
-
-                let itemsHtml = '';
-                cat.items.forEach(item => {
-                    const qty = cart[item.id] ? cart[item.id].qty : 0;
-                    itemsHtml += `
-                        <div class="glass-card rounded-2xl p-4 flex justify-between items-center gap-3 hover:border-amber-500/50 transition-all shadow-md">
-                            <div class="flex-1">
-                                <h3 class="font-bold text-gray-100 text-base mb-1">${item.name}</h3>
-                                <p class="text-amber-400 font-extrabold text-lg">${item.price} <span class="text-xs font-normal text-gray-400">ج.م</span></p>
-                            </div>
-                            
-                            <div class="flex items-center gap-2 bg-zinc-900/90 p-1 rounded-xl border border-zinc-800">
-                                <button onclick="updateQty(${item.id}, '${item.name}', ${item.price}, -1)" class="w-8 h-8 rounded-lg bg-zinc-800 text-amber-400 hover:bg-amber-500 hover:text-black font-bold flex items-center justify-center transition-all">
-                                    <i class="fa-solid fa-minus text-xs"></i>
-                                </button>
-                                <span id="qty-${item.id}" class="w-6 text-center font-bold text-sm text-white">${qty}</span>
-                                <button onclick="updateQty(${item.id}, '${item.name}', ${item.price}, 1)" class="w-8 h-8 rounded-lg bg-amber-500 text-black font-bold flex items-center justify-center hover:bg-amber-400 transition-all shadow-md">
-                                    <i class="fa-solid fa-plus text-xs"></i>
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                });
-
-                section.innerHTML = `
-                    <div class="flex items-center gap-3 mb-4 pb-2 border-b border-amber-500/30">
-                        <i class="fa-solid ${cat.icon} text-amber-500 text-xl"></i>
-                        <h2 class="text-xl font-black text-amber-400 tracking-wide">${cat.category}</h2>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        ${itemsHtml}
-                    </div>
-                `;
-
-                container.appendChild(section);
-            });
-        }
-
-        // Filter menu items on search
-        function filterItems() {
-            const query = document.getElementById('search-input').value.toLowerCase().trim();
-            if (!query) {
-                renderMenu(menuData);
-                return;
-            }
-
-            const filtered = menuData.map(cat => {
-                return {
-                    ...cat,
-                    items: cat.items.filter(item => item.name.toLowerCase().includes(query))
-                };
-            }).filter(cat => cat.items.length > 0);
-
-            renderMenu(filtered);
-        }
-
-        // Scroll smooth to Category
-        function scrollToCategory(id) {
-            if (id === 'all') {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                return;
-            }
-            const el = document.getElementById(id);
-            if (el) {
-                el.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-
-        // Cart Logic
-        function updateQty(id, name, price, change) {
-            if (!cart[id]) {
-                if (change > 0) {
-                    cart[id] = { id, name, price, qty: 1 };
-                }
-            } else {
-                cart[id].qty += change;
-                if (cart[id].qty <= 0) {
-                    delete cart[id];
-                }
-            }
-
-            // Update DOM item quantity
-            const qtyEl = document.getElementById(`qty-${id}`);
-            if (qtyEl) {
-                qtyEl.innerText = cart[id] ? cart[id].qty : 0;
-            }
-
-            updateCartUI();
-        }
-
-        function updateCartUI() {
-            let totalItems = 0;
-            let totalPrice = 0;
-
-            Object.values(cart).forEach(item => {
-                totalItems += item.qty;
-                totalPrice += item.price * item.qty;
-            });
-
-            document.getElementById('cart-badge').innerText = totalItems;
-            document.getElementById('cart-total-price').innerText = totalPrice;
-
-            const floatingBar = document.getElementById('floating-cart-bar');
-            if (totalItems > 0) {
-                floatingBar.classList.remove('translate-y-full');
-            } else {
-                floatingBar.classList.add('translate-y-full');
-                closeCheckoutModal();
-            }
-        }
-
-        // Checkout Modal Functions
-        function openCheckoutModal() {
-            if (Object.keys(cart).length === 0) return;
-
-            const modalCartItems = document.getElementById('modal-cart-items');
-            modalCartItems.innerHTML = '';
-            let total = 0;
-
-            Object.values(cart).forEach(item => {
-                const subtotal = item.price * item.qty;
-                total += subtotal;
-                modalCartItems.innerHTML += `
-                    <div class="flex justify-between items-center text-xs text-gray-300 py-1">
-                        <span>${item.name} (x${item.qty})</span>
-                        <span class="font-bold text-amber-400">${subtotal} ج.م</span>
-                    </div>
-                `;
-            });
-
-            document.getElementById('modal-cart-total').innerText = total;
-            document.getElementById('checkout-modal').classList.remove('hidden');
-            document.getElementById('checkout-modal').classList.add('flex');
-        }
-
-        function openCartModal() {
-            openCheckoutModal();
-        }
-
-        function closeCheckoutModal() {
-            document.getElementById('checkout-modal').classList.add('hidden');
-            document.getElementById('checkout-modal').classList.remove('flex');
-        }
-
-        // WhatsApp Order Submission
-        function sendWhatsAppOrder(e) {
-            e.preventDefault();
-
-            const name = document.getElementById('customer-name').value.trim();
-            const phone = document.getElementById('customer-phone').value.trim();
-            const address = document.getElementById('customer-address').value.trim();
-            const notes = document.getElementById('customer-notes').value.trim();
-
-            if (!name || !phone || !address) {
-                alert("يرجى ملء جميع البيانات المطلوبة");
-                return;
-            }
-
-            let text = `*طلب جديد من مطعم ع الفحم 🔥*\n\n`;
-            text += `👤 *الاسم:* ${name}\n`;
-            text += `📞 *الرقم:* ${phone}\n`;
-            text += `📍 *العنوان:* ${address}\n`;
-            if (notes) {
-                text += `📝 *ملاحظات:* ${notes}\n`;
-            }
-
-            text += `\n*تفاصيل الطلب:*\n`;
-            text += `--------------------------\n`;
-
-            let totalPrice = 0;
-            Object.values(cart).forEach((item, idx) => {
-                const subtotal = item.price * item.qty;
-                totalPrice += subtotal;
-                text += `${idx + 1}. ${item.name}\n   العدد: ${item.qty} × ${item.price} ج.م = ${subtotal} ج.م\n`;
-            });
-
-            text += `--------------------------\n`;
-            text += `💰 *الإجمالي الكلي:* ${totalPrice} جنيه مصري\n\n`;
-            text += `شكراً لاختياركم مطعم ع الفحم! ❤️`;
-
-            const encodedText = encodeURIComponent(text);
-            const waUrl = `https://wa.me/${whatsappNumber}?text=${encodedText}`;
-
-            window.open(waUrl, '_blank');
-        }
-    </script>
+    // Run
+    initApp();
+  </script>
 </body>
 </html>
