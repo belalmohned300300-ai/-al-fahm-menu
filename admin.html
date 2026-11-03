@@ -66,7 +66,7 @@
         </div>
 
         <div class="bg-neutral-900 border border-neutral-800 p-4 rounded-2xl flex flex-col justify-between">
-          <div class="text-xs text-neutral-400 font-bold">إجمالي الطلبات الواردة (محفوظة للأبد)</div>
+          <div class="text-xs text-neutral-400 font-bold">إجمالي الطلبات الواردة</div>
           <div class="text-3xl font-black text-amber-500" id="statOrdersCount">0</div>
           <div class="text-[10px] text-neutral-500">جميع الأوردرات المسجلة</div>
         </div>
@@ -78,6 +78,18 @@
         </div>
       </div>
 
+      <!-- Sync / Backup Section for Mobile & PC -->
+      <div class="bg-neutral-900 border border-neutral-800 p-4 rounded-2xl space-y-3">
+        <h3 class="font-bold text-sm text-amber-500 flex items-center gap-2">
+          <i class="fa-solid fa-sync"></i> مزامنة البيانات بين الكمبيوتر والموبايل
+        </h3>
+        <p class="text-xs text-neutral-400">لكي تظهر نفس الأصناف والمخزن على هاتفك المحمول، اضغط على (نسخ بيانات الكمبيوتر)، ثم افتح صفحة الأدمن من الموبايل والصقها واضغط (استيراد).</p>
+        <div class="flex flex-col md:flex-row gap-2">
+          <button onclick="exportData()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-xl text-xs transition">1- نسخ بيانات الكمبيوتر للحافظة</button>
+          <button onclick="importData()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 px-4 rounded-xl text-xs transition">2- استيراد البيانات (على الموبايل)</button>
+        </div>
+      </div>
+
       <!-- Orders Management Section -->
       <div class="bg-neutral-900 border border-neutral-800 rounded-2xl p-5 space-y-4">
         <div class="flex items-center justify-between border-b border-neutral-800 pb-3">
@@ -85,15 +97,12 @@
             <h2 class="font-bold text-base text-white flex items-center gap-2">
               <i class="fa-solid fa-list-check text-amber-500"></i> سجل الطلبات الواردة
             </h2>
-            <p class="text-xs text-neutral-400 mt-0.5">الأوردرات محفوظة بشكل دائم ولن يتم مسحها تلقائياً</p>
+            <p class="text-xs text-neutral-400 mt-0.5">الأوردرات محفوظة بشكل دائم</p>
           </div>
           <button onclick="clearAllOrders()" class="text-xs bg-red-950 text-red-400 border border-red-800 px-3 py-1.5 rounded-xl font-bold hover:bg-red-900">مسح السجل يدوياً</button>
         </div>
 
-        <!-- Orders List -->
-        <div id="ordersListContainer" class="space-y-3 max-h-96 overflow-y-auto pr-1">
-          <!-- Dynamic Orders -->
-        </div>
+        <div id="ordersListContainer" class="space-y-3 max-h-96 overflow-y-auto pr-1"></div>
       </div>
 
       <!-- Inventory & All Items Management Section -->
@@ -108,9 +117,7 @@
           <input type="text" id="searchAdminItem" oninput="renderAdminItems()" placeholder="بحث عن صنف بالاسم..." class="bg-black border border-neutral-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500 w-full md:w-60">
         </div>
 
-        <div id="adminItemsList" class="space-y-3 max-h-80 overflow-y-auto pr-1">
-          <!-- Dynamic Items -->
-        </div>
+        <div id="adminItemsList" class="space-y-3 max-h-80 overflow-y-auto pr-1"></div>
       </div>
 
       <!-- Add New Item & Category Grid -->
@@ -169,8 +176,75 @@
   <script>
     const defaultCategories = ["الطواجن الرئيسية", "المكرونات", "طواجن موتزريلا", "الفته", "الوجبات", "وجبات الميكس", "المحشي", "المشويات الرئيسية", "حواوشي كبير ع الفحم"];
     
+    // Fallback default menu in case storage is empty
+    const defaultMenu = [
+      { id: 1, name: "طاجن كوارع ورق عنب", price: 300, stock: 50, soldOrders: 0, cat: "الطواجن الرئيسية", available: true },
+      { id: 2, name: "طاجن كوارع", price: 250, stock: 50, soldOrders: 0, cat: "الطواجن الرئيسية", available: true },
+      { id: 3, name: "طاجن كباب", price: 350, stock: 50, soldOrders: 0, cat: "الطواجن الرئيسية", available: true },
+      { id: 4, name: "طاجن لحمه بلدي", price: 350, stock: 50, soldOrders: 0, cat: "الطواجن الرئيسية", available: true },
+      { id: 5, name: "طاجن ملوخيه بالحمه", price: 400, stock: 50, soldOrders: 0, cat: "الطواجن الرئيسية", available: true },
+      { id: 6, name: "طاجن ملوخيه ساده", price: 125, stock: 50, soldOrders: 0, cat: "الطواجن الرئيسية", available: true },
+      { id: 7, name: "طاجن باميه بالحمه", price: 350, stock: 50, soldOrders: 0, cat: "الطواجن الرئيسية", available: true },
+      { id: 8, name: "طاجن لسان عصفور بالحمه", price: 250, stock: 50, soldOrders: 0, cat: "الطواجن الرئيسية", available: true },
+      { id: 9, name: "طاجن لسان عصفور ساده", price: 125, stock: 50, soldOrders: 0, cat: "الطواجن الرئيسية", available: true },
+      { id: 10, name: "مكرونه مع بانيه", price: 125, stock: 50, soldOrders: 0, cat: "المكرونات", available: true },
+      { id: 11, name: "مكرونه مع شيش طاوق", price: 125, stock: 50, soldOrders: 0, cat: "المكرونات", available: true },
+      { id: 12, name: "مكرونه مع كفته", price: 125, stock: 50, soldOrders: 0, cat: "المكرونات", available: true },
+      { id: 13, name: "مكرونه مع نص فرخه", price: 215, stock: 50, soldOrders: 0, cat: "المكرونات", available: true },
+      { id: 14, name: "مكرونه مع سجق", price: 125, stock: 50, soldOrders: 0, cat: "المكرونات", available: true },
+      { id: 15, name: "مكرونه مع شاورما", price: 160, stock: 50, soldOrders: 0, cat: "المكرونات", available: true },
+      { id: 16, name: "مكرونه مع كبده وقوانص", price: 125, stock: 50, soldOrders: 0, cat: "المكرونات", available: true },
+      { id: 17, name: "طاجن لحمه موتزريلا", price: 160, stock: 50, soldOrders: 0, cat: "طواجن موتزريلا", available: true },
+      { id: 18, name: "طاجن كفته موتزريلا", price: 160, stock: 50, soldOrders: 0, cat: "طواجن موتزريلا", available: true },
+      { id: 19, name: "طاجن سجق موتزريلا", price: 130, stock: 50, soldOrders: 0, cat: "طواجن موتزريلا", available: true },
+      { id: 20, name: "طاجن شيش طاوق موتزريلا", price: 160, stock: 50, soldOrders: 0, cat: "طواجن موتزريلا", available: true },
+      { id: 21, name: "طاجن شاورما لحمه موتزريلا", price: 170, stock: 50, soldOrders: 0, cat: "طواجن موتزريلا", available: true },
+      { id: 22, name: "طاجن شاورما فراخ موتزريلا", price: 150, stock: 50, soldOrders: 0, cat: "طواجن موتزريلا", available: true },
+      { id: 23, name: "فتة لحمه", price: 310, stock: 50, soldOrders: 0, cat: "الفته", available: true },
+      { id: 24, name: "فتة لحمه محمره", price: 330, stock: 50, soldOrders: 0, cat: "الفته", available: true },
+      { id: 25, name: "فته شاورما لحمه", price: 300, stock: 50, soldOrders: 0, cat: "الفته", available: true },
+      { id: 26, name: "فته شاورما فراخ", price: 250, stock: 50, soldOrders: 0, cat: "الفته", available: true },
+      { id: 27, name: "فتة كوارع", price: 300, stock: 50, soldOrders: 0, cat: "الفته", available: true },
+      { id: 28, name: "فته ساده", price: 125, stock: 50, soldOrders: 0, cat: "الفته", available: true },
+      { id: 29, name: "وجبة كفته", price: 180, stock: 50, soldOrders: 0, cat: "الوجبات", available: true },
+      { id: 30, name: "وجبة نص فرخه", price: 190, stock: 50, soldOrders: 0, cat: "الوجبات", available: true },
+      { id: 31, name: "وجبة ربع فرخه", price: 125, stock: 50, soldOrders: 0, cat: "الوجبات", available: true },
+      { id: 32, name: "وجبة شيش طاوق", price: 160, stock: 50, soldOrders: 0, cat: "الوجبات", available: true },
+      { id: 33, name: "وجبة لحمه بسمتي", price: 190, stock: 50, soldOrders: 0, cat: "الوجبات", available: true },
+      { id: 34, name: "وجبة ميكس فحم", price: 400, stock: 50, soldOrders: 0, cat: "الوجبات", available: true },
+      { id: 35, name: "وجبة ميكس جريل", price: 350, stock: 50, soldOrders: 0, cat: "الوجبات", available: true },
+      { id: 36, name: "وجبة ارز بالكبده وقوانص", price: 140, stock: 50, soldOrders: 0, cat: "الوجبات", available: true },
+      { id: 37, name: "وجبة نص فرخه مع كفته", price: 320, stock: 50, soldOrders: 0, cat: "وجبات الميكس", available: true },
+      { id: 38, name: "وجبة ربع فرخه مع كفته", price: 250, stock: 50, soldOrders: 0, cat: "وجبات الميكس", available: true },
+      { id: 39, name: "وجبة شيش طاوق مع كفته", price: 250, stock: 50, soldOrders: 0, cat: "الوجبات", available: true },
+      { id: 40, name: "وجبة ورق عنب مع بانيه", price: 280, stock: 50, soldOrders: 0, cat: "المحشي", available: true },
+      { id: 41, name: "وجبة كرنب مع بانيه", price: 250, stock: 50, soldOrders: 0, cat: "المحشي", available: true },
+      { id: 42, name: "ورق عنب مع شيش طاوق", price: 270, stock: 50, soldOrders: 0, cat: "المحشي", available: true },
+      { id: 43, name: "كرنب مع شيش طاوق", price: 240, stock: 50, soldOrders: 0, cat: "المحشي", available: true },
+      { id: 44, name: "ورق عنب مع كفته", price: 290, stock: 50, soldOrders: 0, cat: "المحشي", available: true },
+      { id: 45, name: "كرنب مع كفته", price: 270, stock: 50, soldOrders: 0, cat: "المحشي", available: true },
+      { id: 46, name: "ورق عنب مع نص فرخه", price: 330, stock: 50, soldOrders: 0, cat: "المحشي", available: true },
+      { id: 47, name: "كرنب مع نص فرخه", price: 310, stock: 50, soldOrders: 0, cat: "المحشي", available: true },
+      { id: 48, name: "دجاجه كامله", price: 650, stock: 50, soldOrders: 0, cat: "المشويات الرئيسية", available: true },
+      { id: 49, name: "دجاج شيش", price: 600, stock: 50, soldOrders: 0, cat: "المشويات الرئيسية", available: true },
+      { id: 50, name: "نص كفته ضاني", price: 480, stock: 50, soldOrders: 0, cat: "المشويات الرئيسية", available: true },
+      { id: 51, name: "نص كفته كندوز", price: 410, stock: 50, soldOrders: 0, cat: "المشويات الرئيسية", available: true },
+      { id: 52, name: "نص كفته بلدي", price: 450, stock: 50, soldOrders: 0, cat: "المشويات الرئيسية", available: true },
+      { id: 53, name: "نص شيش", price: 320, stock: 50, soldOrders: 0, cat: "المشويات الرئيسية", available: true },
+      { id: 54, name: "نص بانيه", price: 350, stock: 50, soldOrders: 0, cat: "المشويات الرئيسية", available: true },
+      { id: 55, name: "نص كفته وطرب", price: 500, stock: 50, soldOrders: 0, cat: "المشويات الرئيسية", available: true },
+      { id: 56, name: "نص ميكس فحم", price: 650, stock: 50, soldOrders: 0, cat: "المشويات الرئيسية", available: true },
+      { id: 57, name: "نص ميكس جريل", price: 500, stock: 50, soldOrders: 0, cat: "المشويات الرئيسية", available: true },
+      { id: 58, name: "حواوشي كبير ع الفحم", price: 120, stock: 50, soldOrders: 0, cat: "حواوشي كبير ع الفحم", available: true },
+      { id: 59, name: "حواوشي متزريلا كبير ع الفحم", price: 140, stock: 50, soldOrders: 0, cat: "حواوشي كبير ع الفحم", available: true },
+      { id: 60, name: "حواوشي ميكس جبن كبير ع الفحم", price: 160, stock: 50, soldOrders: 0, cat: "حواوشي كبير ع الفحم", available: true },
+      { id: 61, name: "حواوشي بسطرمه كبير ع الفحم", price: 170, stock: 50, soldOrders: 0, cat: "حواوشي كبير ع الفحم", available: true },
+      { id: 62, name: "حواوشي سجق كبير ع الفحم", price: 170, stock: 50, soldOrders: 0, cat: "حواوشي كبير ع الفحم", available: true },
+      { id: 63, name: "حواوشي طرب كبير ع الفحم", price: 190, stock: 50, soldOrders: 0, cat: "حواوشي كبير ع الفحم", available: true }
+    ];
+
     let categories = JSON.parse(localStorage.getItem('alfahm_cats')) || defaultCategories;
-    let menuItems = JSON.parse(localStorage.getItem('alfahm_menu')) || [];
+    let menuItems = JSON.parse(localStorage.getItem('alfahm_menu')) || defaultMenu;
     let promoCodes = JSON.parse(localStorage.getItem('alfahm_promos')) || { 'OFF10': 10 };
     let adminPass = localStorage.getItem('alfahm_pass') || '1234';
     let isStoreOpen = JSON.parse(localStorage.getItem('alfahm_open')) ?? true;
@@ -331,6 +405,11 @@
       const container = document.getElementById('adminItemsList');
       const search = document.getElementById('searchAdminItem').value.trim().toLowerCase();
 
+      // If storage menu is empty, fallback to defaultMenu so items always show up!
+      if (!menuItems || menuItems.length === 0) {
+        menuItems = defaultMenu;
+      }
+
       let filtered = menuItems.filter(i => i.name.toLowerCase().includes(search));
 
       if (filtered.length === 0) {
@@ -437,6 +516,47 @@
 
     function saveData() {
       localStorage.setItem('alfahm_menu', JSON.stringify(menuItems));
+    }
+
+    // Export and Import for Mobile Sync
+    function exportData() {
+      const data = {
+        menu: menuItems,
+        cats: categories,
+        promos: promoCodes,
+        orders: ordersList
+      };
+      const jsonStr = JSON.stringify(data);
+      navigator.clipboard.writeText(jsonStr).then(() => {
+        alert('تم نسخ بيانات المخزن والأصناف بنجاح! الآن افتح صفحة الأدمن من الموبايل واضغط (استيراد البيانات).');
+      }).catch(err => {
+        prompt('انسخ هذا الكود يدوياً إلى هاتفك:', jsonStr);
+      });
+    }
+
+    function importData() {
+      const jsonStr = prompt('قم بصق بيانات النسخ الاحتياطي (الكود الذي نسخته من الكمبيوتر) هنا:');
+      if (jsonStr) {
+        try {
+          const data = JSON.parse(jsonStr);
+          if (data.menu) {
+            localStorage.setItem('alfahm_menu', JSON.stringify(data.menu));
+            menuItems = data.menu;
+          }
+          if (data.cats) {
+            localStorage.setItem('alfahm_cats', JSON.stringify(data.cats));
+            categories = data.cats;
+          }
+          if (data.orders) {
+            localStorage.setItem('alfahm_orders_list', JSON.stringify(data.orders));
+            ordersList = data.orders;
+          }
+          alert('تم استيراد البيانات والمخزن بنجاح على الموبايل!');
+          location.reload();
+        } catch (e) {
+          alert('الكود غير صحيح، تأكد من نسخه كاملاً.');
+        }
+      }
     }
   </script>
 </body>
