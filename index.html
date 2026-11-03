@@ -90,6 +90,7 @@
 
       <div id="orderSummary" class="bg-neutral-950 p-3 rounded-xl mb-4 space-y-2 text-sm border border-neutral-800"></div>
 
+      <!-- Promo Code Section -->
       <div class="mb-4">
         <label class="block text-xs font-bold text-neutral-400 mb-1">كود الخصم (إن وجد)</label>
         <div class="flex gap-2">
@@ -114,6 +115,7 @@
         </div>
       </div>
 
+      <!-- Customer Form -->
       <form id="orderForm" onsubmit="sendOrderToWhatsApp(event)" class="space-y-3">
         <div>
           <label class="block text-xs font-bold text-neutral-400 mb-1">الاسم بالكامل *</label>
@@ -127,6 +129,22 @@
           <label class="block text-xs font-bold text-neutral-400 mb-1">عنوان التوصيل بالتفصيل *</label>
           <textarea id="custAddress" required rows="2" placeholder="المنطقة - الشارع - رقم العمارة - الشقة" class="w-full bg-black border border-neutral-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500"></textarea>
         </div>
+
+        <!-- Payment Method Selection -->
+        <div>
+          <label class="block text-xs font-bold text-neutral-400 mb-1">طريقة الدفع *</label>
+          <select id="paymentMethod" onchange="togglePaymentInfo()" class="w-full bg-black border border-neutral-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
+            <option value="كاش عند الاستلام">💵 كاش عند الاستلام</option>
+            <option value="فودافون كاش">🔴 فودافون كاش</option>
+            <option value="إنستا باي (InstaPay)">🟣 إنستا باي (InstaPay)</option>
+          </select>
+        </div>
+
+        <!-- Dynamic Payment Instructions -->
+        <div id="paymentInstructions" class="hidden bg-neutral-950 border border-neutral-800 p-3 rounded-xl text-xs space-y-1 text-amber-400">
+          <div id="paymentTextDetail"></div>
+        </div>
+
         <div>
           <label class="block text-xs font-bold text-neutral-400 mb-1">ملاحظات إضافية (اختياري)</label>
           <input type="text" id="custNotes" placeholder="مثال: بدون بصل" class="w-full bg-black border border-neutral-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
@@ -357,10 +375,27 @@
       document.getElementById('finalTotal').innerText = subtotal;
       document.getElementById('promoMessage').innerText = '';
       document.getElementById('promoCodeInput').value = '';
+      togglePaymentInfo();
       document.getElementById('checkoutModal').classList.remove('hidden');
     }
 
     function closeCheckoutModal() { document.getElementById('checkoutModal').classList.add('hidden'); }
+
+    function togglePaymentInfo() {
+      const method = document.getElementById('paymentMethod').value;
+      const box = document.getElementById('paymentInstructions');
+      const text = document.getElementById('paymentTextDetail');
+
+      if (method === 'فودافون كاش') {
+        box.classList.remove('hidden');
+        text.innerHTML = `رقم تحويل فودافون كاش: <strong class="text-white text-sm select-all">01121126633</strong><br>يرجى إرسال قيمة الأوردر وإرفاق سكرين الشوت عبر الواتساب.`;
+      } else if (method === 'إنستا باي (InstaPay)') {
+        box.classList.remove('hidden');
+        text.innerHTML = `رقم تحويل إنستا باي (InstaPay): <strong class="text-white text-sm select-all">01098201848</strong><br>يرجى تحويل المبلغ وإرسال إيصال التحويل مع الأوردر.`;
+      } else {
+        box.classList.add('hidden');
+      }
+    }
 
     function applyPromoCode() {
       const code = document.getElementById('promoCodeInput').value.trim().toUpperCase();
@@ -386,6 +421,7 @@
       const name = document.getElementById('custName').value.trim();
       const phone = document.getElementById('custPhone').value.trim();
       const address = document.getElementById('custAddress').value.trim();
+      const paymentMethod = document.getElementById('paymentMethod').value;
       const notes = document.getElementById('custNotes').value.trim();
       let subtotal = parseFloat(document.getElementById('subTotal').innerText);
       let finalTotal = parseFloat(document.getElementById('finalTotal').innerText);
@@ -410,6 +446,7 @@
         name: name,
         phone: phone,
         address: address,
+        paymentMethod: paymentMethod,
         notes: notes,
         items: orderItemsList,
         total: finalTotal,
@@ -425,6 +462,7 @@
       msg += `*العميل:* ${name}\n`;
       msg += `*الهاتف:* ${phone}\n`;
       msg += `*العنوان:* ${address}\n`;
+      msg += `*طريقة الدفع:* ${paymentMethod}\n`;
       if (notes) msg += `*ملاحظات:* ${notes}\n`;
       msg += `\n*الأصناف المطلوبة:*\n`;
 
